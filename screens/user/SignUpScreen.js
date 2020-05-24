@@ -81,8 +81,6 @@ const defaultFlag = data.filter(
   const [flag, setFlag] = useState(defaultFlag);
   const [countryCode, setCountryCode] = useState('+91');
   const [error, setError] = useState();
-  
-  const [passwordText, setPasswordText] = useState('');
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
@@ -144,6 +142,7 @@ let updatedStatus = true;
   if(!updatedStatus)
   {
   Alert.alert('Mandatory fields not entered', "Except Email Address, all fields are mandatory");
+  formState.inputValidities.fName = inputChangeHandler('fName', formState.inputValues.fName);
   return;
   }
   signUpHandler();
@@ -413,7 +412,6 @@ const createErrorText = (element, errorText) => {
         </ScrollView>
       </View>
     </LinearGradient>
-  // </KeyboardAvoidingView>
   );
 };
 
