@@ -13,7 +13,8 @@ import {
   FlatList,
   TouchableOpacity,
   TouchableHighlight,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TextInput
 } from 'react-native';
 import {
   Icon, Container, 
@@ -26,39 +27,101 @@ import CustomInput from '../../components/UI/Input';
 import Colors from '../../constants/Constants';
 import * as authActions from '../../store/actions/auth';
 import data from '../../data/Countries';
-import Toast from 'react-native-simple-toast';
+//import Toast from 'react-native-simple-toast';
+
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const mobileNbrRegex = /^[0-9]*$/;
+
+const SignUpScreen = props => {
+
+
+  const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_INPUT_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value
+    };
+
+    if(action.input === 'password2')
+    {
+      if(!(updatedValues.password === updatedValues.password2))
+      action.isValid = false;
+      else
+      action.isValid = true;
+    }
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues
+    };
+  }
+  return state;
+};
+
+
 
 const countryData = data;
 const defaultFlag = data.filter(
   obj => obj.name === 'India'
   )[0].flag;
 
-const SignUpScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [flag, setFlag] = useState(defaultFlag);
   const [countryCode, setCountryCode] = useState('+91');
   const [error, setError] = useState();
-
-
-  const [firstNameError, setFirstNameError] = useState(false);
-  const [lastNameError, setLastNameError] = useState(false);
-  const [addressError, setAddressError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [password2Error, setPassword2Error] = useState(false);
-  const [mobileError, setMobileError] = useState(false);
-
-
-  const [firstNameText, setFirstNameText] = useState('');
-  const [lastNameText, setLastNameText] = useState('');
-  const [addressText, setAddressText] = useState('');
-  const [emailText, setEmailText] = useState('');
-  const [passwordText, setPasswordText] = useState('');
-  const [password2Text, setPassword2Text] = useState('');
-  const [mobileText, setMobileText] = useState('');
   
+  const [passwordText, setPasswordText] = useState('');
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      fName: '',
+      lName:'',
+      address:'',
+      password:'',
+      password2:'',
+      email:'',
+      mobile:''
+    },
+    inputValidities: {
+      fName: true,
+      lName: true,
+      address:true,
+      password:true,
+      password2:true,
+      email:true,
+      mobile:true
+    },
+    formIsValid: false
+  });
+
+  const inputChangeHandler = useCallback(
+    (inputIdentifier, inputValue) => {
+     
+      setPasswordText(inputValue);
+      let a = passwordText;
+      let isValidText = isValidCheck(inputIdentifier, inputValue);
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: isValidText,
+        input: inputIdentifier
+      });
+    },
+    [dispatchFormState]
+  );
+
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -67,41 +130,33 @@ const SignUpScreen = props => {
     }
   }, [error]);
 
-
-  // useEffect(() => {
-  //   firstNameTextChange(firstNameText);
-  //   lastNameTextChange(lastNameText);
-  //   addressTextChange(addressText);
-  //   password2TextChange(password2Text);
-  //   passwordTextChange(passwordText);
-  //   emailTextChange(emailText);
-  //   mobileTextChange(mobileText);
-  // }, [firstNameError,lastNameError ,addressError ,password2Error,passwordError , emailError , mobileError]);
-
-  
 const preSignup = ()=> {
-  firstNameTextChange(firstNameText);
-  lastNameTextChange(lastNameText);
-  addressTextChange(addressText);
-  password2TextChange(password2Text);
-  passwordTextChange(passwordText);
-  emailTextChange(emailText);
-  mobileTextChange(mobileText);
-  if(firstNameError || lastNameError || addressError || password2Error || passwordError || emailError || mobileError)
-  {
-    return;
+formState.inputValidities.fName = isValidCheck('fName', formState.inputValues.fName);
+formState.inputValidities.lName = isValidCheck('lName', formState.inputValues.lName);
+formState.inputValidities.address = isValidCheck('address', formState.inputValues.address);
+formState.inputValidities.password = isValidCheck('password', formState.inputValues.password);
+formState.inputValidities.password2 = isValidCheck('password2', formState.inputValues.password2);
+formState.inputValidities.email = isValidCheck('email', formState.inputValues.email);
+formState.inputValidities.mobile = isValidCheck('mobile', formState.inputValues.mobile);
+let updatedStatus = true;
+  const currentValidities = formState.inputValidities;
+  for (const key in currentValidities) {
+    updatedStatus = updatedStatus && currentValidities[key];
   }
-else
-{
+
+  if(!updatedStatus)
+  {
+  Alert.alert('Mandatory fields not entered', "Except Email Address, all fields are mandatory");
+  return;
+  }
   signUpHandler();
-}
 }
 
   const signUpHandler = async () => {
     let action;
       action = authActions.sendOtp(
-        emailText,
-        mobileText
+        formState.inputValues.email,
+        formState.inputValues.mobile
       );
     setError(null);
     setIsLoading(true);
@@ -109,8 +164,8 @@ else
      await dispatch(action);
      setIsLoading(false);
      props.navigation.navigate('EnterOTP', {
-      emailText : emailText,
-      mobileText: mobileText
+      emailText : formState.inputValues.email,
+      mobileText: formState.inputValues.mobile
     });
     } catch (err) {
       setError(err.message);
@@ -118,115 +173,21 @@ else
     }
   };
 
-  
-  const firstNameTextChange = (firstNameText) => {
-    Toast.showWithGravity('This is a long toast at the top.', Toast.LONG, Toast.TOP);
-    setFirstNameText(firstNameText);
-    if(firstNameText.length < 1)
-    {
-      setFirstNameError(true);
-    }
-    else{
-      setFirstNameError(false);
-    }
-  }
-
-
-  const lastNameTextChange = (lastNameText) => {
-  
-    setLastNameText(lastNameText);
-    if(lastNameText.length < 1)
-    {
-      setLastNameError(true);
-    }
-    else{
-      setLastNameError(false);
-    }
-  }
-
-  const addressTextChange = (addressText) => {
-  
-    setAddressText(addressText);
-    if(addressText.length < 1)
-    {
-      setAddressError(true);
-    }
-    else{
-      setAddressError(false);
-    }
-  }
-
-  const emailTextChange = (emailText) => {
-  
-    setEmailText(emailText);
-
-    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if( !(emailText.trim().length == 0 || emailRegex.test(emailText)))
-    {
-      setEmailError(true);
-    }
-    else{
-      setEmailError(false);
-    }
-  }
-  const passwordTextChange = (passwordText) => {
-  
-    setPasswordText(passwordText);
-    if(passwordText.length < 5)
-    {
-      setPasswordError(true);
-    }
-    else{
-      setPasswordError(false);
-    }
-    if(password2Text.length > 0 && (password2Text !== passwordText))
-    {
-      setPassword2Error(true);
-    }
-    else{
-      setPassword2Error(false);
-    }
-  }
-
-  const password2TextChange = (password2Text) => {
-  
-    setPassword2Text(password2Text);
-    if(password2Text !== passwordText || password2Text.trim().length< 1)
-    {
-      setPassword2Error(true);
-    }
-    else{
-      setPassword2Error(false);
-    }
-  }
-
-  const mobileTextChange = (mobileText) => {
-   const mobileNbrRegex = /^[0-9]*$/;
-    setMobileText(mobileText);
-    if( mobileText.length < 1 || !mobileNbrRegex.test(mobileText))
-    {
-      setMobileError(true);
-    }
-    else{
-      setMobileError(false);
-    }
-  }
-
   const createIcon = (element) => {
 const icon = (
   <Icon name='close-circle'/>
 );
-    if(element == "FIRSTNAME"  && firstNameError)
+    if(element == "FIRSTNAME"  && !formState.inputValidities.fName)
       return icon;
-      if(element == "LASTNAME"  && lastNameError)
+      if(element == "LASTNAME"  && !formState.inputValidities.lName)
       return icon;
-      if(element == "EMAIL"  && emailError)
+      if(element == "EMAIL"  && !formState.inputValidities.email)
       return icon;
-      if(element == "PASSWORD"  && passwordError)
+      if(element == "PASSWORD"  && !formState.inputValidities.password)
       return icon;
-      if(element == "PASSWORD2"  && password2Error)
+      if(element == "PASSWORD2"  && !formState.inputValidities.password2)
       return icon;
-      if(element == "MOBILE"  && mobileError)
+      if(element == "MOBILE"  && !formState.inputValidities.mobile)
       return icon;
 }
 
@@ -234,24 +195,24 @@ const createErrorText = (element, errorText) => {
   const errorTextComponent = (
     <Text style = {{color: "red"}}>{errorText}</Text>
   );
-  if(element =="FIRSTNAME" && firstNameError)
+  if(element =="FIRSTNAME" && !formState.inputValidities.fName)
     return errorTextComponent;
-  if (element =="LASTNAME" && lastNameError)
-    return errorTextComponent;
-
-    if (element =="ADDRESS" && addressError)
+  if (element =="LASTNAME" && !formState.inputValidities.lName)
     return errorTextComponent;
 
-    if(element =="EMAIL" && emailError)
+    if (element =="ADDRESS" && !formState.inputValidities.address)
     return errorTextComponent;
 
-    if(element =="PASSWORD" && passwordError)
+    if(element =="EMAIL" && !formState.inputValidities.email)
     return errorTextComponent;
 
-    if(element =="PASSWORD2" && password2Error)
+    if(element =="PASSWORD" && !formState.inputValidities.password)
     return errorTextComponent;
 
-    if(element =="MOBILE" && mobileError)
+    if(element =="PASSWORD2" && !formState.inputValidities.password2)
+    return errorTextComponent;
+
+    if(element =="MOBILE" && !formState.inputValidities.mobile)
     return errorTextComponent;
 }
   const selectCountry = async (country) => {
@@ -276,32 +237,74 @@ const createErrorText = (element, errorText) => {
     }
   };
 
+
+  const isValidCheck = (inputIdentifier, inputValue) => {
+    let isValidText = false;
+  
+    switch(inputIdentifier)
+    {
+      case 'fName': 
+      (inputValue.trim().length > 0) ? isValidText = true : isValidText = false;
+      break;
+      case 'lName': 
+      (inputValue.trim().length > 0) ? isValidText = true : isValidText = false;
+      break;
+      case 'address': 
+      (inputValue.trim().length > 0) ? isValidText = true : isValidText = false;
+      break;
+      case 'password': 
+      setPasswordText(inputValue);
+      (inputValue.trim().length > 4) ? isValidText = true : isValidText = false;
+      break;
+      case 'password2': 
+      (inputValue.length > 4) ? isValidText = true : isValidText = false;
+      break;
+      case 'email': 
+    (inputValue.trim().length == 0 || emailRegex.test(inputValue)) ? isValidText = true : isValidText = false;
+      break;
+
+      case 'mobile': 
+      (inputValue.trim().length > 1 && mobileNbrRegex.test(inputValue))? isValidText = true : isValidText = false; 
+      break;
+      default:
+        Alert.alert("NUMBER NOT FOUND");
+    }
+    // if ((inputIdentifier === 'fName' || inputIdentifier === 'lName'
+    //  || inputIdentifier === 'address' || inputIdentifier === 'password')&& inputValue.trim().length > 0) {
+    //   isValidText = true;
+    // }
+    return isValidText;
+  }
+
   return ( 
   //   <KeyboardAvoidingView
   //   behavior="padding"
   //   keyboardVerticalOffset={2}
   //   style={styles.screen}
   // >
+
+  //onEndEditing onSubmitEditing
     <LinearGradient colors={['#ffffff', '#ffffff']} style={styles.gradient}>
       <View style={styles.authContainer}>
         <ScrollView>
             <Item  style={styles.itemStyle}
-            error = {firstNameError}
+            error = {!formState.inputValidities.fName}
             floatingLabel>             
              <Label>First Name * </Label>
              < Input 
-             onChangeText={firstNameText => firstNameTextChange(firstNameText)}/>
+             onChangeText={inputChangeHandler.bind(this, 'fName')}/>
              {createIcon("FIRSTNAME")}  
             </Item>
-            {createErrorText("FIRSTNAME", 'First Name cannot be empty')}
+            {createErrorText("FIRSTNAME", 'First Name cannot be empty')} 
 
 
             <Item  style={styles.itemStyle}
-            error = {lastNameError}
+            error = {!formState.inputValidities.lName}
             floatingLabel>             
              <Label>Last Name * </Label>
-             < Input 
-             onChangeText={lastNameText => lastNameTextChange(lastNameText)}/>
+             <Input 
+           onChangeText={ inputChangeHandler.bind(this, 'lName')}
+             />
              {createIcon("LASTNAME")}  
             </Item>
           
@@ -310,51 +313,52 @@ const createErrorText = (element, errorText) => {
  <Text style = {{paddingTop: 15, fontSize: 15}}> Address *</Text>
                     <View>
              < Textarea style = {styles.textAreaStyle}
-                         onChangeText={addressText => addressTextChange(addressText)}/>
+                         onChangeText={inputChangeHandler.bind(this, 'address')}/>
             </View>
             {createErrorText("ADDRESS", 'Address cannot be empty')}
           
           <Item  style={styles.itemStyle}
-            error = {passwordError}
+            error = {!formState.inputValidities.password}
             floatingLabel>             
              <Label>Password * </Label>
              < Input 
              secureTextEntry
-             onChangeText={passwordText => passwordTextChange(passwordText)}/>
-             {/* {createIcon("PASSWORD")}   */}
+             onChangeText={inputChangeHandler.bind(this, 'password')}/>
+             {/* {createIcon("PASSWORD")}    */}
             </Item>
           
             {createErrorText("PASSWORD", 'Password Length cannot be less than 5')}
 
             <Item  style={styles.itemStyle}
-            error = {password2Error}
+            error = {!formState.inputValidities.password2}
             floatingLabel>             
              <Label>Re-enter Password * </Label>
              < Input 
              secureTextEntry
-             onChangeText={password2Text => password2TextChange(password2Text)}/>
+             onChangeText={inputChangeHandler.bind(this, 'password2')}/>
              {/* {createIcon("PASSWORD2")}   */}
             </Item>
             {createErrorText("PASSWORD2", 'Password not matched')}
 
 <View style = {styles.textContainer}>
             <Text style = {styles.textContainer}>OTP will be sent to Email ID and Mobile </Text>
-            <Text>(Register your Email ID to receive instant OTP's, Confirmations and communications. But, Email ID is not mandatory)</Text>
+            <Text>(Register your Email ID to receive instant OTP's, Confirmations and Communications. But, Email ID is not mandatory)</Text>
             </View>
             <Item  style={styles.itemStyle}
-            error = {emailError}
+            error = {!formState.inputValidities.email}
             floatingLabel>             
              <Label>Email Address </Label>
              < Input 
+             style={styles.inputStyle}
              keyboardType="email-address"
-             onChangeText={emailText => emailTextChange(emailText)}/>
+             onChangeText={inputChangeHandler.bind(this, 'email')}/>
              {/* {createIcon("EMAIL")}   */}
             </Item>
           
             {createErrorText("EMAIL", 'Invalid Email Address')}
             
           <Item style = {styles.itemStyle} 
-          error = {mobileError}>
+          error = {!formState.inputValidities.mobile}>
             <Icon
               active
               name='md-arrow-dropup-circle'
@@ -366,12 +370,12 @@ const createErrorText = (element, errorText) => {
             <View><Text >{countryCode}</Text></View> 
 
             <Item  style={styles.noBorder}
-            error = {mobileError}
             floatingLabel>             
              <Label>Mobile Number *</Label>
              < Input 
+             style={styles.inputStyle}
              keyboardType="number-pad"
-             onChangeText={mobileText => mobileTextChange(mobileText)}/>
+             onChangeText={inputChangeHandler.bind(this, 'mobile')}/>
              {createIcon("MOBILE")}   
             </Item>
                 <Modal
@@ -514,3 +518,5 @@ const styles = StyleSheet.create({
 });
 
 export default SignUpScreen;
+
+

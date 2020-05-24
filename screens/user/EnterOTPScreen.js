@@ -19,16 +19,16 @@ const EnterOTPScreen = (props) => {
 
   const emailText = props.navigation.state.params.emailText;
   const mobileText = props.navigation.state.params.mobileText;
-  const [error, setError] = useState();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (error) {
-      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
-    }
-  }, [error]);
 
-  return (
-    <KeyboardAvoidingView
+  const onChangeCode = code => {
+    console.log(code);
+  };
+
+  const onFullFill = code => {
+    console.log(code);
+  };
+
+  const mobile = (<KeyboardAvoidingView
     behavior="padding"
     keyboardVerticalOffset={20}
     style={styles.screen}
@@ -36,80 +36,99 @@ const EnterOTPScreen = (props) => {
     <LinearGradient colors={['#8dc5fc', '#8dc5fc']} style={styles.gradient}>
       <View style={styles.authContainer}>
         <ScrollView>
-        { emailText.trim().length ? (
-
-          <React.Fragment>
-                       <Card style={styles.authContainer}>
-        <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
-<InputCode
-          length={4}
-          // onChangeCode={onChangeCode}
-          // onFullFill={onFullFill}
-          codeContainerStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-          }}
-          codeContainerCaretStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-            borderBottomColor: 'red',
-          }}
-          autoFocus
-        />
-          </Card>
 
           <Card style={styles.authContainer}>
-        <View><Text >Enter OTP received to your Email address {emailText}</Text></View>
-          <InputCode
-          length={4}
-          autoFocus={false}
-          codeContainerStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-          }}
-          codeContainerCaretStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-            borderBottomColor: 'red',
-
-          }}
-        />
+            <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
+            <InputCode
+              length={4}
+              onChangeCode={onChangeCode}
+              onFullFill={onFullFill}
+              // onChangeCode={onChangeCode}
+              // onFullFill={onFullFill}
+              codeContainerStyle={{
+                borderWidth: 0,
+                borderBottomWidth: 2,
+              }}
+              codeContainerCaretStyle={{
+                borderWidth: 0,
+                borderBottomWidth: 2,
+                borderBottomColor: 'red',
+              }}
+              autoFocus
+            />
           </Card>
-  </React.Fragment>
-    ) : (
-      <React.Fragment>
-         <Card style={styles.authContainer}>
-    <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
-
-      <View style={styles.container}>
-        <InputCode
-          length={4}
-          codeContainerStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-          }}
-          codeContainerCaretStyle={{
-            borderWidth: 0,
-            borderBottomWidth: 2,
-            borderBottomColor: 'red',
-          }}
-          autoFocus
-        />
+          <View style={styles.buttonContainer}>
+            <Button
+              title={`Register`}
+              color={Colors.primary}
+            />
+          </View>
+        </ScrollView>
       </View>
-  </Card>
-  </React.Fragment>)}
+    </LinearGradient>
+  </KeyboardAvoidingView>);
 
-  <View style={styles.buttonContainer}>
+  const emailMobile = (
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={20}
+      style={styles.screen}
+    >
+      <LinearGradient colors={['#8dc5fc', '#8dc5fc']} style={styles.gradient}>
+        <View style={styles.authContainer}>
+          <ScrollView>
+            <Card style={styles.authContainer}>
+              <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
+              <InputCode
+                length={4}
+                onChangeCode={onChangeCode}
+                onFullFill={onFullFill}
+                // onChangeCode={onChangeCode}
+                // onFullFill={onFullFill}
+                codeContainerStyle={{
+                  borderWidth: 0,
+                  borderBottomWidth: 2,
+                }}
+                codeContainerCaretStyle={{
+                  borderWidth: 0,
+                  borderBottomWidth: 2,
+                  borderBottomColor: 'red',
+                }}
+                autoFocus
+              />
+            </Card>
+
+            <Card style={styles.authContainer}>
+              <View><Text >Enter OTP received to your Email address {emailText}</Text></View>
+              <InputCode
+                length={4}
+                autoFocus={false}
+                onChangeCode={onChangeCode}
+                onFullFill={onFullFill}
+                codeContainerStyle={{
+                  borderWidth: 0,
+                  borderBottomWidth: 2,
+                }}
+                codeContainerCaretStyle={{
+                  borderWidth: 0,
+                  borderBottomWidth: 2,
+                  borderBottomColor: 'red',
+                }}
+              />
+            </Card>
+            <View style={styles.buttonContainer}>
               <Button
                 title={`Register`}
                 color={Colors.primary}
               />
             </View>
-        </ScrollView>
-      </View>
-    </LinearGradient>
-  </KeyboardAvoidingView>
-  );
+          </ScrollView>
+        </View>
+      </LinearGradient>
+    </KeyboardAvoidingView>
+  )
+
+  return emailText.trim().length > 1 ? emailMobile : mobile;
 };
 
 EnterOTPScreen.navigationOptions = {
