@@ -148,6 +148,23 @@ let updatedStatus = true;
 }
 
   const signUpHandler = async () => {
+
+    let checkValidityAction;
+    checkValidityAction = authActions.checkValidity(
+      formState.inputValues.email,
+      formState.inputValues.mobile
+    );
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(checkValidityAction);
+      setIsLoading(false);
+    }
+    catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+      return;
+    }
     let action;
       action = authActions.sendOtp(
         formState.inputValues.email,
