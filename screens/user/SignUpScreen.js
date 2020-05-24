@@ -108,9 +108,6 @@ const defaultFlag = data.filter(
 
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue) => {
-     
-      setPasswordText(inputValue);
-      let a = passwordText;
       let isValidText = isValidCheck(inputIdentifier, inputValue);
       dispatchFormState({
         type: FORM_INPUT_UPDATE,
@@ -253,7 +250,6 @@ const createErrorText = (element, errorText) => {
       (inputValue.trim().length > 0) ? isValidText = true : isValidText = false;
       break;
       case 'password': 
-      setPasswordText(inputValue);
       (inputValue.trim().length > 4) ? isValidText = true : isValidText = false;
       break;
       case 'password2': 
@@ -269,21 +265,11 @@ const createErrorText = (element, errorText) => {
       default:
         Alert.alert("NUMBER NOT FOUND");
     }
-    // if ((inputIdentifier === 'fName' || inputIdentifier === 'lName'
-    //  || inputIdentifier === 'address' || inputIdentifier === 'password')&& inputValue.trim().length > 0) {
-    //   isValidText = true;
-    // }
     return isValidText;
   }
 
   return ( 
-  //   <KeyboardAvoidingView
-  //   behavior="padding"
-  //   keyboardVerticalOffset={2}
-  //   style={styles.screen}
-  // >
 
-  //onEndEditing onSubmitEditing
     <LinearGradient colors={['#ffffff', '#ffffff']} style={styles.gradient}>
       <View style={styles.authContainer}>
         <ScrollView>
