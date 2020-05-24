@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Button,
   Alert,
-  Text
+  Text,
+  ActivityIndicator
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,21 +15,51 @@ import { useDispatch } from 'react-redux';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Constants';
 import InputCode from 'react-native-input-code';
+import * as authActions from '../../store/actions/auth';
 
 const EnterOTPScreen = (props) => {
+  const email = props.navigation.state.params.email;
+  const mobile = props.navigation.state.params.mobile;
+  const fName = props.navigation.state.params.fName;
+  const lName = props.navigation.state.params.lName;
+  const address = props.navigation.state.params.address;
+  const password = props.navigation.state.params.password;
 
-  const emailText = props.navigation.state.params.emailText;
-  const mobileText = props.navigation.state.params.mobileText;
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+  const [mobileOTP, setMobileOTP] = useState('');
+  const [emailOTP, setEmailOTP] = useState('');
 
-  const onChangeCode = code => {
-    console.log(code);
+  const dispatch = useDispatch();
+  const registerHandler = async () => {
+    if(emailOTP.trim().length !=4 || mobileOTP.trim().length !=4)
+    {
+      Alert.alert('OTP not entered correctly');
+      return;
+    }
+    let action;
+      action = authActions.register(
+        fName, lName, address, password, email, mobile, mobileOTP, emailOTP
+
+      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      Alert.alert('Success!', 'User '+ fName+ ' '+lName+' added successfully. Please login to continue');
+      props.navigation.navigate('Auth');
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
-  const onFullFill = code => {
-    console.log(code);
-  };
-
-  const mobile = (<KeyboardAvoidingView
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
+  const mobileComponent = (<KeyboardAvoidingView
     behavior="padding"
     keyboardVerticalOffset={20}
     style={styles.screen}
@@ -38,13 +69,12 @@ const EnterOTPScreen = (props) => {
         <ScrollView>
 
           <Card style={styles.authContainer}>
-            <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
+            <View><Text >Enter OTP received to your Mobile number {mobile}</Text></View>
             <InputCode
               length={4}
-              onChangeCode={onChangeCode}
-              onFullFill={onFullFill}
-              // onChangeCode={onChangeCode}
-              // onFullFill={onFullFill}
+              onChangeCode={mobileOTP => {
+                setMobileOTP(mobileOTP)}}
+              //onFullFill={onFullFill}
               codeContainerStyle={{
                 borderWidth: 0,
                 borderBottomWidth: 2,
@@ -58,17 +88,22 @@ const EnterOTPScreen = (props) => {
             />
           </Card>
           <View style={styles.buttonContainer}>
-            <Button
-              title={`Register`}
-              color={Colors.primary}
-            />
+          {isLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+              <Button
+                title={'Register'}
+                color={Colors.primary}
+                onPress={registerHandler}
+              />
+            )}
           </View>
         </ScrollView>
       </View>
     </LinearGradient>
   </KeyboardAvoidingView>);
 
-  const emailMobile = (
+  const emailMobileComponent = (
     <KeyboardAvoidingView
       behavior="padding"
       keyboardVerticalOffset={20}
@@ -78,13 +113,11 @@ const EnterOTPScreen = (props) => {
         <View style={styles.authContainer}>
           <ScrollView>
             <Card style={styles.authContainer}>
-              <View><Text >Enter OTP received to your Mobile number {mobileText}</Text></View>
+              <View><Text >Enter OTP received to your Mobile number {mobile}</Text></View>
               <InputCode
                 length={4}
-                onChangeCode={onChangeCode}
-                onFullFill={onFullFill}
-                // onChangeCode={onChangeCode}
-                // onFullFill={onFullFill}
+                onChangeCode={mobileOTP => {
+                  setMobileOTP(mobileOTP)}}
                 codeContainerStyle={{
                   borderWidth: 0,
                   borderBottomWidth: 2,
@@ -99,12 +132,12 @@ const EnterOTPScreen = (props) => {
             </Card>
 
             <Card style={styles.authContainer}>
-              <View><Text >Enter OTP received to your Email address {emailText}</Text></View>
+              <View><Text >Enter OTP received to your Email address {email}</Text></View>
               <InputCode
                 length={4}
                 autoFocus={false}
-                onChangeCode={onChangeCode}
-                onFullFill={onFullFill}
+                onChangeCode={emailOTP => {
+                  setEmailOTP(emailOTP)}}
                 codeContainerStyle={{
                   borderWidth: 0,
                   borderBottomWidth: 2,
@@ -117,10 +150,16 @@ const EnterOTPScreen = (props) => {
               />
             </Card>
             <View style={styles.buttonContainer}>
+
+{isLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
               <Button
-                title={`Register`}
+                title={'Register'}
                 color={Colors.primary}
+                onPress={registerHandler}
               />
+            )}
             </View>
           </ScrollView>
         </View>
@@ -128,7 +167,7 @@ const EnterOTPScreen = (props) => {
     </KeyboardAvoidingView>
   )
 
-  return emailText.trim().length > 1 ? emailMobile : mobile;
+  return email.trim().length > 1 ? emailMobileComponent : mobileComponent;
 };
 
 EnterOTPScreen.navigationOptions = {

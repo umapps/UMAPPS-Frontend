@@ -78,38 +78,32 @@ export const login = (email, password) => {
 };
 
 
-export const signUp = (email, password) => {
+export const register = (fName, lName, address, password, email, mobile, mobileOTP, emailOTP) => {
   return async dispatch => {
     const response = await fetch(
-      'https://umapps.in/sign-in',
+      'https://umapps.in/sign-up',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: email,
+          emailId: email,
+          firstName: fName,
+          lastName: lName, 
+          address: address,
+          mobileNumber: mobile, 
           password: password,
-          returnSecureToken: true
+          mobileOTP: mobileOTP,
+          emailOTP: emailOTP
         })
       }
     );
 
     if (!response.ok) {
       const errorResData = await response.json();
-      const errorId = errorResData.error;
-      let message = 'Something went wrong!';
-      if (errorId === 'Unauthorized') {
-        message = 'Invalid credentials';
-      }
-      // else if (errorId === 'INVALID_PASSWORD') {
-      //   message = 'This password is not valid!';
-      // }
-      throw new Error(message);
+      throw new Error(errorResData.message);
     }
-
-    const resData = await response.json();
-    saveDataToStorage(resData.accessToken, resData.id, resData.emailId, resData.mobileNumber, resData.roles );
   };
 };
 

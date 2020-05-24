@@ -75,7 +75,7 @@ const AuthScreen = props => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      props.navigation.navigate('Shop');
+      Alert.alert('Login successful', [{ text: 'Okay' }]);
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
@@ -104,7 +104,7 @@ const AuthScreen = props => {
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+      <LinearGradient colors={['#8dc5fc', '#8dc5fc']} style={styles.gradient}>
         <Card style={styles.authContainer}>
           <ScrollView>
             <Input
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
   authContainer: {
     width: '80%',
     maxWidth: 400,
+    minWidth:400,
     maxHeight: 400,
     padding: 20
   },

@@ -130,7 +130,6 @@ formState.inputValidities.fName = isValidCheck('fName', formState.inputValues.fN
 formState.inputValidities.lName = isValidCheck('lName', formState.inputValues.lName);
 formState.inputValidities.address = isValidCheck('address', formState.inputValues.address);
 formState.inputValidities.password = isValidCheck('password', formState.inputValues.password);
-formState.inputValidities.password2 = isValidCheck('password2', formState.inputValues.password2);
 formState.inputValidities.email = isValidCheck('email', formState.inputValues.email);
 formState.inputValidities.mobile = isValidCheck('mobile', formState.inputValues.mobile);
 let updatedStatus = true;
@@ -141,7 +140,7 @@ let updatedStatus = true;
 
   if(!updatedStatus)
   {
-  Alert.alert('Mandatory fields not entered', "Except Email Address, all fields are mandatory");
+  Alert.alert('Error in the data entered', "Except Email Address, all fields are mandatory");
   formState.inputValidities.fName = inputChangeHandler('fName', formState.inputValues.fName);
   return;
   }
@@ -160,8 +159,12 @@ let updatedStatus = true;
      await dispatch(action);
      setIsLoading(false);
      props.navigation.navigate('EnterOTP', {
-      emailText : formState.inputValues.email,
-      mobileText: formState.inputValues.mobile
+      email : formState.inputValues.email,
+      mobile: formState.inputValues.mobile,
+      fName:formState.inputValues.fName,
+      lName:formState.inputValues.lName,
+      address: formState.inputValues.address,
+      password:formState.inputValues.password
     });
     } catch (err) {
       setError(err.message);
@@ -399,7 +402,7 @@ const createErrorText = (element, errorText) => {
 
           <View style={styles.buttonContainer}>
             {isLoading ? (
-              <ActivityIndicator size="small" color={Colors.accent} />
+              <ActivityIndicator size="small" color={Colors.primary} />
             ) : (
               <Button
                 title={'Send OTP'}
