@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  createStackNavigator,
   createSwitchNavigator,
-  createAppContainer,
+  createAppContainer
+  
 } from 'react-navigation';
+import {createStackNavigator } from 'react-navigation-stack';
 import { Platform} from 'react-native';
 
 import AuthScreen from '../screens/user/AuthScreen';
