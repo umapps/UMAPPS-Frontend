@@ -75,7 +75,8 @@ const AuthScreen = props => {
     setIsLoading(true);
     try {
       await dispatch(action);
-      Alert.alert('Login successful', [{ text: 'Okay' }]);
+      Alert.alert('Login successful for '+formState.inputValues.email);
+      setIsLoading(false);
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
