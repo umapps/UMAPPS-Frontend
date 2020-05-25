@@ -7,7 +7,7 @@ import ShopNavigator from './ShopNavigator';
 const NavigationContainer = props => {
   const navRef = useRef();
   const isAuth = useSelector(state => !!state.auth.token);
-  useSelector(state => console.log(state));
+ // useSelector(state => console.log(state));
   useEffect(() => {
     if (!isAuth) {
       navRef.current.dispatch(
