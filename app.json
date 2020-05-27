@@ -6,7 +6,10 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.umapps.booking"
+      "package": "com.umapps.booking",
+      "versionCode": 1,
+      "permissions": [
+      ]
     },
     "slug": "UM-Application",
     "privacy": "public",
