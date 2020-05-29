@@ -26,11 +26,44 @@ const EnterOTPScreen = (props) => {
   const password = props.navigation.state.params.password;
 
   const [isLoading, setIsLoading] = useState(false);
+
   const [error, setError] = useState();
   const [mobileOTP, setMobileOTP] = useState('');
   const [emailOTP, setEmailOTP] = useState('');
-
+  const [currentCount, setCount] = useState(30);
+  const Clock = () => {
+    const timer = () => setCount(currentCount - 1);
+    useEffect(
+        () => {
+            if (currentCount <= 0) {
+                return () => clearInterval(id); 
+            }
+            const id = setInterval(timer, 1000);
+            return () => clearInterval(id);
+        },
+        [currentCount]
+    );
+    return <Text style = {{marginRight: 15, fontSize: 25}}>{currentCount}</Text>;
+};
   const dispatch = useDispatch();
+
+  const resendOTP = async () => {
+    let action;
+      action = authActions.sendOtp(
+        '', mobile
+      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      setIsLoading(false);
+     } catch (err) {
+       setError(err.message);
+
+       setIsLoading(false);
+     }
+     setCount(30);
+      };
   const registerHandler = async () => {
     if(emailOTP.trim().length !=4 || mobileOTP.trim().length !=4)
     {
@@ -86,6 +119,15 @@ const EnterOTPScreen = (props) => {
               }}
               autoFocus
             />
+            <View style={styles.resendOTPView}>
+            <Clock />
+            <Button
+                title={' Resend OTP '}
+                color={Colors.accent}
+                disabled={currentCount>0 ? true: false}
+                onPress={resendOTP}
+              />
+              </View>
           </Card>
           <View style={styles.buttonContainer}>
           {isLoading ? (
@@ -129,6 +171,15 @@ const EnterOTPScreen = (props) => {
                 }}
                 autoFocus
               />
+            <View style={styles.resendOTPView}>
+            <Clock />
+            <Button
+                title={' Resend OTP '}
+                color={Colors.accent}
+                disabled={currentCount>0 ? true: false}
+                onPress={resendOTP}
+              />
+              </View>
             </Card>
 
             <Card style={styles.authContainer}>
@@ -235,6 +286,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderColor: "#000000",
   },
+  resendOTPView:{
+    paddingTop: 20,
+    flexDirection: "row",
+    justifyContent: 'flex-end',
+    alignSelf: 'stretch'
+  }
 });
 
 export default EnterOTPScreen;
