@@ -43,7 +43,7 @@ const EnterOTPScreen = (props) => {
         },
         [currentCount]
     );
-    return <Text style = {{marginRight: 15, fontSize: 25}}>{currentCount}</Text>;
+    return <Text style = {{marginRight: 15, fontSize: 25, fontWeight: 'bold'}}>{currentCount}</Text>;
 };
   const dispatch = useDispatch();
 

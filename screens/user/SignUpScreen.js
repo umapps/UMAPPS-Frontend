@@ -130,6 +130,8 @@ formState.inputValidities.fName = isValidCheck('fName', formState.inputValues.fN
 formState.inputValidities.lName = isValidCheck('lName', formState.inputValues.lName);
 formState.inputValidities.address = isValidCheck('address', formState.inputValues.address);
 formState.inputValidities.password = isValidCheck('password', formState.inputValues.password);
+formState.inputValidities.password2 = isValidCheck('password2', formState.inputValues.password2)
+ && (formState.inputValues.password === formState.inputValues.password2);
 formState.inputValidities.email = isValidCheck('email', formState.inputValues.email);
 formState.inputValidities.mobile = isValidCheck('mobile', formState.inputValues.mobile);
 let updatedStatus = true;
