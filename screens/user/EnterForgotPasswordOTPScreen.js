@@ -18,7 +18,7 @@ import InputCode from 'react-native-input-code';
 import * as authActions from '../../store/actions/auth';
 
 const EnterForgotPasswordOTPScreen = (props) => {
-  const userId = props.navigation.state.params.userId.trim();
+  const userId = props.navigation.state.params.userId;
   const password = props.navigation.state.params.password;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -64,20 +64,20 @@ const EnterForgotPasswordOTPScreen = (props) => {
       Alert.alert('OTP not entered correctly');
       return;
     }
-    // let action;
-    //   action = authActions.register(
-    //     fName, lName, address, password, email, mobile, mobileOTP, emailOTP
-    //   );
-    // setError(null);
-    // setIsLoading(true);
-    // try {
-    //   await dispatch(action);
-    //   Alert.alert('Success!', 'User '+ fName+ ' '+lName+' added successfully. Please login to continue');
-    //   props.navigation.navigate('Auth');
-    // } catch (err) {
-    //   setError(err.message);
-    //   setIsLoading(false);
-    // }
+    let action;
+      action = authActions.resetPassword(
+        userId, password, mobileOTP
+      );
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      Alert.alert('Success!', 'Password reset successfully. Please login to continue');
+      props.navigation.navigate('Auth');
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -141,6 +141,29 @@ export const login = (email, password) => {
   };
 };
 
+export const resetPassword = (userId, password, otp) => {
+  return async dispatch => {
+    const response = await fetch(
+      'https://umapps.in/reset-password',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: userId,
+          password: password,
+          otp: otp
+        })
+      }
+    );
+    if (!response.ok) {
+      const errorResData = await response.json();
+      throw new Error(errorResData.message);
+    }
+  };
+};
+
 
 export const register = (fName, lName, address, password, email, mobile, mobileOTP, emailOTP) => {
   return async dispatch => {
