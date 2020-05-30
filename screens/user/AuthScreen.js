@@ -15,8 +15,7 @@ import { useDispatch } from 'react-redux';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Constants';
-import * as authActions from '../../store/actions/auth';
-
+import * as authActions from '../../store/actions/auth'; 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
@@ -87,6 +86,10 @@ const AuthScreen = props => {
   const signUpHandler = async () => {
     props.navigation.navigate('SignUp');
   };
+
+  const forgotPasswordHandler = async () => {
+    props.navigation.navigate('ForgotPassword');
+  }
   const inputChangeHandler = useCallback(
     (inputIdentifier, inputValue, inputValidity) => {
       dispatchFormState({
@@ -135,6 +138,13 @@ const AuthScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue=""
             />
+
+<View style={{alignItems: "center"}}>
+      <Text style = {{color: "blue"}}
+      onPress={forgotPasswordHandler}>
+        Forgot Password
+      </Text> 
+    </View>
             <View style={styles.buttonContainer}>
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />

@@ -61,6 +61,27 @@ export const checkValidity = (email, mobile) => {
   };
 };
 
+
+export const checkIsRegistered = (userId) => {
+  return async dispatch => {
+    const url = 'https://umapps.in/is-registered?userId='+userId
+    const response = await fetch(
+      url,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    if (!response.ok) {
+      const errorResData = await response.json();
+      throw new Error(errorResData.message);
+    }
+  };
+};
+
+
 export const login = (email, password) => {
   return async dispatch => {
     const response = await fetch(
