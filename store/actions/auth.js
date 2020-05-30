@@ -42,6 +42,30 @@ export const sendOtp = (email, mobile) => {
   };
 };
 
+export const sendForgotPwOtp = (userId) => {
+  return async dispatch => {
+    const url = 'https://umapps.in/send-fpOTP?userId='+userId
+    const response = await fetch(
+      url,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorResData = await response.json();
+      const errorId = errorResData.error;
+      let message = 'Something went wrong!';
+      if (errorId === 'Unauthorized') {
+        message = 'Invalid credentials';
+      }
+      throw new Error(message);
+    }
+  };
+};
 export const checkValidity = (email, mobile) => {
   return async dispatch => {
     const url = 'https://umapps.in/check-validity?mobileNumber='+mobile+'&emailId='+email

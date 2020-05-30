@@ -61,28 +61,23 @@ const ForgotPasswordScreen = props => {
       setIsLoading(false);
       return;
     }
-    // let action;
-    //   action = authActions.sendOtp(
-    //     formState.inputValues.email,
-    //     formState.inputValues.mobile
-    //   );
-    // setError(null);
-    // setIsLoading(true);
-    // try {
-    //  await dispatch(action);
-    //  setIsLoading(false);
-    //  props.navigation.navigate('EnterOTP', {
-    //   email : formState.inputValues.email,
-    //   mobile: formState.inputValues.mobile,
-    //   fName:formState.inputValues.fName,
-    //   lName:formState.inputValues.lName,
-    //   address: formState.inputValues.address,
-    //   password:formState.inputValues.password
-    // });
-    // } catch (err) {
-    //   setError(err.message);
-    //   setIsLoading(false);
-    // }
+    let action;
+      action = authActions.sendForgotPwOtp(
+        formState.inputValues.mobile
+      );
+    setError(null);
+    setIsLoading(true);
+    try {
+     await dispatch(action);
+     setIsLoading(false);
+     props.navigation.navigate('EnterForgotPasswordOTP', {
+      userId: formState.inputValues.mobile,
+      password:formState.inputValues.password
+    });
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -203,6 +198,7 @@ const ForgotPasswordScreen = props => {
             floatingLabel>             
              <Label>Email Id / Mobile Number *</Label>
              < Input 
+             autoCapitalize = 'none'
              error = {!formState.inputValidities.mobile}
               style={styles.inputStyle}
             onChangeText={inputChangeHandler.bind(this, 'mobile')}

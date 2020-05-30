@@ -355,6 +355,7 @@ const createErrorText = (element, errorText) => {
             floatingLabel>             
              <Label>Email Address </Label>
              < Input 
+             autoCapitalize = 'none'
              style={styles.inputStyle}
              keyboardType="email-address"
              onChangeText={inputChangeHandler.bind(this, 'email')}/>

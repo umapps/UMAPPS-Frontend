@@ -12,6 +12,7 @@ import StartupScreen from '../screens/StartupScreen';
 import SignUpScreen from '../screens//user/SignUpScreen';
 import EnterOTPScreen from '../screens//user/EnterOTPScreen';
 import ForgotPasswordScreen from '../screens//user/ForgotPasswordScreen';
+import EnterForgotPasswordOTPScreen from '../screens//user/EnterForgotPasswordOTPScreen';
 import Colors from '../constants/Constants';
 
 const defaultNavOptions = {
@@ -32,6 +33,7 @@ const AuthNavigator = createStackNavigator(
     Auth: AuthScreen,
     SignUp: SignUpScreen,
     EnterOTP: EnterOTPScreen,
+    EnterForgotPasswordOTP: EnterForgotPasswordOTPScreen,
     ForgotPassword: ForgotPasswordScreen
   },
   {
