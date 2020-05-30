@@ -16,7 +16,7 @@ export const authenticate = (userId, token, expiryTime) => {
 
 export const sendOtp = (email, mobile) => {
   return async dispatch => {
-    const url = 'https://umapps.in/sendRegisterOTP?mobileNumber='+mobile+'&emailId='+email
+    const url = 'https://umapps.in/send-rgOTP?mobileNumber='+mobile+'&emailId='+email
     const response = await fetch(
       url,
       {
