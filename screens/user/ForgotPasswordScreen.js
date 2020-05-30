@@ -32,8 +32,7 @@ const ForgotPasswordScreen = props => {
 
   const forgotPasswordHandler = async () => {
     formState.inputValidities.password = isValidCheck('password', formState.inputValues.password);
-    formState.inputValidities.password2 = isValidCheck('password2', formState.inputValues.password2)
-     && (formState.inputValues.password === formState.inputValues.password2);
+    formState.inputValidities.password2 = (formState.inputValues.password === formState.inputValues.password2);
     formState.inputValidities.mobile = isValidCheck('mobile', formState.inputValues.mobile);
     let updatedStatus = true;
       const currentValidities = formState.inputValidities;
