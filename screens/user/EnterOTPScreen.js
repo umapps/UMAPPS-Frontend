@@ -40,10 +40,15 @@ const EnterOTPScreen = (props) => {
             }
             const id = setInterval(timer, 1000);
             return () => clearInterval(id);
+            
         },
         [currentCount]
     );
-    return <Text style = {{marginRight: 15, fontSize: 25, fontWeight: 'bold'}}>{currentCount}</Text>;
+   return <Text style={{flex:3}}>
+   <Text >Resend OTP in </Text>
+ <Text style = {{paddingRight: 0, fontSize: 25, fontWeight: 'bold', justifyContent: "flex-end"}}>{currentCount} </Text>
+ <Text >seconds </Text>
+ </Text>
 };
   const dispatch = useDispatch();
 
@@ -121,12 +126,14 @@ const EnterOTPScreen = (props) => {
             />
             <View style={styles.resendOTPView}>
             <Clock />
+            <View style={{flex:2, marginleft:10}} >
             <Button
                 title={' Resend OTP '}
                 color={Colors.accent}
                 disabled={currentCount>0 ? true: false}
                 onPress={resendOTP}
               />
+              </View>
               </View>
           </Card>
           <View style={styles.buttonContainer}>
@@ -173,12 +180,14 @@ const EnterOTPScreen = (props) => {
               />
             <View style={styles.resendOTPView}>
             <Clock />
+            <View style={{flex:2, marginleft:10}} >
             <Button
                 title={' Resend OTP '}
                 color={Colors.accent}
                 disabled={currentCount>0 ? true: false}
                 onPress={resendOTP}
               />
+              </View>
               </View>
             </Card>
 
@@ -287,6 +296,7 @@ const styles = StyleSheet.create({
     borderColor: "#000000",
   },
   resendOTPView:{
+    flex:1,
     paddingTop: 20,
     flexDirection: "row",
     justifyContent: 'flex-end',

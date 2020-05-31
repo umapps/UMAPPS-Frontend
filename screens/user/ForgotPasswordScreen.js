@@ -14,14 +14,9 @@ import {
 Item, Input, Label
 } from 'native-base'
 
-import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
-import CustomInput from '../../components/UI/Input';
 import Colors from '../../constants/Constants';
 import * as authActions from '../../store/actions/auth';
-import data from '../../data/Countries';
-//import Toast from 'react-native-simple-toast';
-
 const ForgotPasswordScreen = props => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const mobileNbrRegex = /^[0-9]*$/;
@@ -43,7 +38,7 @@ const ForgotPasswordScreen = props => {
       if(!updatedStatus)
       {
       Alert.alert('Error in the data entered', "All fields are mandatory");
-      formState.inputValidities.fName = inputChangeHandler('mobile', formState.inputValues.mobile);
+      formState.inputValidities.mobile = inputChangeHandler('mobile', formState.inputValues.mobile);
       return;
       }
     let checkValidityAction;

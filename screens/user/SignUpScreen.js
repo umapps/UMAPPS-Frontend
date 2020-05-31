@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   }, textStyleCancel:
   {
     marginRight: 30,
-
+    marginLeft: 30,
     marginBottom: 30
   },
   borderStyleBase: {
