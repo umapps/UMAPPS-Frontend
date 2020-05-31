@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Alert } from 'react-native';
 // export const SIGNUP = 'SIGNUP';
 // export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
@@ -40,6 +40,35 @@ export const sendOtp = (email, mobile) => {
     }
   };
 };
+
+
+export const deleteuser = (token) => {
+  return async dispatch => {
+    const url = 'https://umapps.in/delete'
+    const response = await fetch(
+      url,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      }
+    );
+console.log(response);
+    if (!response.ok) {
+      const errorResData = await response.json();
+      const errorId = errorResData.error;
+      Alert.alert(errorId);
+      return;
+    }
+    else{
+      logout();
+      Alert.alert("User deleted successfully.");
+    }
+  };
+};
+
 
 export const sendForgotPwOtp = (userId) => {
   return async dispatch => {

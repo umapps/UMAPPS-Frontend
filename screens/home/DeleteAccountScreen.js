@@ -1,24 +1,77 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import {
   View,
   Text,
   Platform,
-  StyleSheet
+  Alert,
+  StyleSheet,
+  AsyncStorage
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-
+import { useDispatch } from 'react-redux';
 import HeaderButton from '../../components/UI/HeaderButton';
+import * as authActions from '../../store/actions/auth'; 
 
 const DeleteAccountScreen = props => {
-  
+  const dispatch = useDispatch();
+  const deleteUserApi = async () => {
+    const userData = await AsyncStorage.getItem('userData');
+    if (!userData) {
+      props.navigation.navigate('Auth');
+      return;
+    }
+    const transformedData = JSON.parse(userData);
+    const { token } = transformedData;
+    let action;
+    action = authActions.deleteuser(token);
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+      props.navigation.navigate('Auth');
+      
+     // Alert.alert('Login successful for '+formState.inputValues.email);
+      setIsLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
+
+  const deleteUserHandler = async () => {
+    Alert.alert(
+      "Alert! All your data will be lost",
+      "Do you want to continue?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { text: "OK", onPress: deleteUserApi }
+      ],
+      { cancelable: false }
+    );
+
+  }
+
   return (
 <View style={{
     flex: 1, 
     alignItems: 'center',
     justifyContent: 'center', 
 }}>
-    <Text>
-        This is delete account screen
+    <Text style = {{color: "blue"}}
+      onPress={deleteUserHandler}>
+        Click here to delete your account
     </Text>
 </View>
   );

@@ -76,7 +76,7 @@ const AuthScreen = props => {
       await dispatch(action);
       props.navigation.navigate('HomePage');
       
-      Alert.alert('Login successful for '+formState.inputValues.email);
+     // Alert.alert('Login successful for '+formState.inputValues.email);
       setIsLoading(false);
     } catch (err) {
       setError(err.message);
