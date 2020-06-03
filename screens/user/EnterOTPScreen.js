@@ -70,7 +70,7 @@ const EnterOTPScreen = (props) => {
      setCount(30);
       };
   const registerHandler = async () => {
-    if(emailOTP.trim().length !=4 || mobileOTP.trim().length !=4)
+    if((emailOTP.trim().length !=4 && email.trim().length >1 )|| mobileOTP.trim().length !=4)
     {
       Alert.alert('OTP not entered correctly');
       return;
