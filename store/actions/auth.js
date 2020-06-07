@@ -13,9 +13,9 @@ export const authenticate = (userId, token, expiryTime) => {
   };
 };
 
-export const sendOtp = (email, mobile) => {
+export const sendOtp = (email, countyCode, mobile) => {
   return async dispatch => {
-    const url = 'https://umapps.in/send-rgOTP?mobileNumber='+mobile+'&emailId='+email
+    const url = 'https://umapps.in/send-rgOTP?mobileNumber='+mobile+'&countryCode='+countyCode+'&emailId='+email
     const response = await fetch(
       url,
       {
@@ -193,7 +193,7 @@ export const resetPassword = (userId, password, otp) => {
 };
 
 
-export const register = (fName, lName, address, password, email, mobile, mobileOTP, emailOTP) => {
+export const register = (fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP) => {
   return async dispatch => {
     const response = await fetch(
       'https://umapps.in/sign-up',
@@ -210,7 +210,8 @@ export const register = (fName, lName, address, password, email, mobile, mobileO
           mobileNumber: mobile, 
           password: password,
           mobileOTP: mobileOTP,
-          emailOTP: emailOTP
+          emailOTP: emailOTP,
+          countryCode: countryCode
         })
       }
     );

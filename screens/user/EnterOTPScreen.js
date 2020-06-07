@@ -24,7 +24,7 @@ const EnterOTPScreen = (props) => {
   const lName = props.navigation.state.params.lName;
   const address = props.navigation.state.params.address;
   const password = props.navigation.state.params.password;
-
+  const countryCode = props.navigation.state.params.countryCode;
   const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState();
@@ -77,7 +77,7 @@ const EnterOTPScreen = (props) => {
     }
     let action;
       action = authActions.register(
-        fName, lName, address, password, email, mobile, mobileOTP, emailOTP
+        fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP
 
       );
     setError(null);
