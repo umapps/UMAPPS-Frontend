@@ -68,7 +68,7 @@ const AuthScreen = props => {
     let action;
       action = authActions.login(
         formState.inputValues.email,
-        formState.inputValues.password
+        '91'+formState.inputValues.password
       );
     setError(null);
     setIsLoading(true);

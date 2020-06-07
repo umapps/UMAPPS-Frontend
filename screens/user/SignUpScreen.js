@@ -153,7 +153,7 @@ let updatedStatus = true;
     let checkValidityAction;
     checkValidityAction = authActions.checkValidity(
       formState.inputValues.email,
-      formState.inputValues.mobile
+      countryCode.substring(1) + formState.inputValues.mobile
     );
     setError(null);
     setIsLoading(true);
@@ -169,7 +169,7 @@ let updatedStatus = true;
     let action;
       action = authActions.sendOtp(
         formState.inputValues.email,
-        formState.inputValues.mobile
+        countryCode.substring(1) + formState.inputValues.mobile
       );
     setError(null);
     setIsLoading(true);
@@ -178,7 +178,7 @@ let updatedStatus = true;
      setIsLoading(false);
      props.navigation.navigate('EnterOTP', {
       email : formState.inputValues.email,
-      mobile: formState.inputValues.mobile,
+      mobile: countryCode.substring(1) + formState.inputValues.mobile,
       fName:formState.inputValues.fName,
       lName:formState.inputValues.lName,
       address: formState.inputValues.address,
