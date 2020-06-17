@@ -11,11 +11,11 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
-
+import * as Updates from 'expo-updates';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Constants';
-import * as authActions from '../../store/actions/auth'; 
+import * as authActions from '../../store/actions/auth';
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
@@ -44,6 +44,8 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isDownloadingUpdates, setIsDownloadingUpdates] = useState(false);
   const [error, setError] = useState();
   const dispatch = useDispatch();
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -59,6 +61,22 @@ const AuthScreen = props => {
   });
 
   useEffect(() => {
+    const downloadOTAupdates = async () => {
+      try {
+        setIsDownloadingUpdates(true);
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      }
+      catch (e) { console.log(e) }
+      finally {
+        setIsDownloadingUpdates(false);
+      }
+    };
+    downloadOTAupdates();
     if (error) {
       Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
     }
@@ -66,24 +84,21 @@ const AuthScreen = props => {
 
   const authHandler = async () => {
     let action;
-      action = authActions.login(
-        formState.inputValues.email,
-        formState.inputValues.password
-      );
+    action = authActions.login(
+      formState.inputValues.email,
+      formState.inputValues.password
+    );
     setError(null);
     setIsLoading(true);
     try {
       await dispatch(action);
       props.navigation.navigate('HomePage');
-      
-     // Alert.alert('Login successful for '+formState.inputValues.email);
       setIsLoading(false);
     } catch (err) {
       setError(err.message);
       setIsLoading(false);
     }
   };
-
 
   const signUpHandler = async () => {
     props.navigation.navigate('SignUp');
@@ -104,82 +119,94 @@ const AuthScreen = props => {
     [dispatchFormState]
   );
 
-  return (
+  const uiComponent = (
     // <KeyboardAvoidingView
     //   behavior="padding"
     //   keyboardVerticalOffset={50}
     //   style={styles.screen}
     // >
-      <LinearGradient colors={['#8dc5fc', '#8dc5fc']} style={styles.gradient}>
-        <Card style={styles.authContainer}>
-          <ScrollView>
-            <Input
-              id="email"
-              label="Email / Mobile number"
-              keyboardType="email-address"
-              required
-              email
-              showLabel
-              placeholder="Email/ 10 Digit Mobile number"
-              autoCapitalize="none"
-              errorText="Please enter a valid Email or 10 digit Mobile number"
-              onInputChange={inputChangeHandler}
-              initialValue=""
-            />
-            <Input
-              id="password"
-              label="Password"
-              keyboardType="default"
-              secureTextEntry
-              required
-              showLabel
-              minLength={5}
-              placeholder="Password"
-              autoCapitalize="none"
-              errorText="Please enter a valid password"
-              onInputChange={inputChangeHandler}
-              initialValue=""
-            />
+    <LinearGradient colors={['#8dc5fc', '#8dc5fc']} style={styles.gradient}>
+      <Card style={styles.authContainer}>
+        <ScrollView>
+          <Input
+            id="email"
+            label="Email / Mobile number"
+            keyboardType="email-address"
+            required
+            email
+            showLabel
+            placeholder="Email/ 10 Digit Mobile number"
+            autoCapitalize="none"
+            errorText="Please enter a valid Email or 10 digit Mobile number"
+            onInputChange={inputChangeHandler}
+            initialValue=""
+          />
+          <Input
+            id="password"
+            label="Password"
+            keyboardType="default"
+            secureTextEntry
+            required
+            showLabel
+            minLength={5}
+            placeholder="Password"
+            autoCapitalize="none"
+            errorText="Please enter a valid password"
+            onInputChange={inputChangeHandler}
+            initialValue=""
+          />
 
-<View style={{alignItems: "center"}}>
-      <Text style = {{color: "blue"}}
-      onPress={forgotPasswordHandler}>
-        Forgot Password
-      </Text> 
-    </View>
-            <View style={styles.buttonContainer}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ color: "blue" }}
+              onPress={forgotPasswordHandler}>
+              Forgot Password
+      </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
                 <Button
                   title={'Login'}
                   color={Colors.primary}
                   onPress={authHandler}
                 />
               )}
-            </View>
+          </View>
 
-            <View style={styles.textContainer}>
-      <Text>
-        Not Registered yet ?
-      </Text> 
-    </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title={`Register`}
-                color={Colors.accent}
-                onPress={signUpHandler}
-              />
-            </View>
-          </ScrollView>
-        </Card>
-      </LinearGradient>
+          <View style={styles.textContainer}>
+            <Text>
+              Not Registered yet ?
+      </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color={Colors.primary} />
+            ) : (
+                <Button
+                  title={`Register`}
+                  color={Colors.accent}
+                  onPress={signUpHandler}
+                />
+              )}
+          </View>
+        </ScrollView>
+      </Card>
+    </LinearGradient>
     // </KeyboardAvoidingView>
   );
+
+  const loadingComponent = (
+    <View style={styles.screen}>
+      <ActivityIndicator size="large" color={Colors.primary} />
+      <Text> Downloading over the air updates, Please wait</Text>
+    </View>
+  );
+  return isDownloadingUpdates ? loadingComponent : uiComponent;
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: 'Authenticate'
+  headerTitle: 'Authenticate to continue'
 };
 
 const styles = StyleSheet.create({
@@ -194,7 +221,7 @@ const styles = StyleSheet.create({
   authContainer: {
     width: '80%',
     maxWidth: 400,
-    minWidth:400,
+    minWidth: 400,
     maxHeight: 400,
     padding: 20
   },
@@ -203,6 +230,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 10,
+    alignItems: 'center'
+  },
+  screen: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center'
   }
 });
