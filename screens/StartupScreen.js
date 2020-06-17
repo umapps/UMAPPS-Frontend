@@ -9,15 +9,25 @@ import { useDispatch } from 'react-redux';
 
 import Colors from '../constants/Constants';
 import * as authActions from '../store/actions/auth';
+import * as Updates from 'expo-updates';
 
 const StartupScreen = props => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const tryLogin = async () => {
+
+      try {
+        const update = await Updates.checkForUpdateAsync();
+        if (update.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      } catch (e) {
+      }
       const userData = await AsyncStorage.getItem('userData');
       if (!userData) {
-        props.navigation.navigate('Auth');
+       props.navigation.navigate('Auth');
         return;
       }
       const transformedData = JSON.parse(userData);
@@ -25,14 +35,14 @@ const StartupScreen = props => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        props.navigation.navigate('Auth');
+       props.navigation.navigate('Auth');
         return;
       }
 
       const expirationTime = expirationDate.getTime() - new Date().getTime();
 
       props.navigation.navigate('HomePage');
-      dispatch(authActions.authenticate(userId, token, expirationTime));
+     dispatch(authActions.authenticate(userId, token, expirationTime));
     };
 
     tryLogin();
