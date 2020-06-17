@@ -44,7 +44,7 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [loadingMessage, setLoadingMessage] = useState("Checking for updates..");
   const [isDownloadingUpdates, setIsDownloadingUpdates] = useState(false);
   const [error, setError] = useState();
   const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const AuthScreen = props => {
         setIsDownloadingUpdates(true);
         const update = await Updates.checkForUpdateAsync();
         if (update.isAvailable) {
-
+          setLoadingMessage("New updates found, Downloading.. this might take up to one minute depending on network connectivity");
           await Updates.fetchUpdateAsync();
           await Updates.reloadAsync();
         }
@@ -199,19 +199,22 @@ const AuthScreen = props => {
   const loadingComponent = (
     <View style={styles.screen}>
       <ActivityIndicator size="large" color={Colors.primary} />
-      <Text> Downloading over the air updates, Please wait</Text>
+      <Text> {loadingMessage}</Text>
     </View>
   );
   return isDownloadingUpdates ? loadingComponent : uiComponent;
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: 'Authenticate to continue'
+  headerTitle: 'Authenticate'
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
+    margin: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   gradient: {
     flex: 1,
@@ -230,11 +233,6 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginTop: 10,
-    alignItems: 'center'
-  },
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center'
   }
 });
