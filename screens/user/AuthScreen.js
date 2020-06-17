@@ -77,9 +77,9 @@ const AuthScreen = props => {
       }
     };
     downloadOTAupdates();
-    if (error) {
-      Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
-    }
+    // if (error) {
+    //   Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
+    // }
   }, [error]);
 
   const authHandler = async () => {
@@ -88,14 +88,13 @@ const AuthScreen = props => {
       formState.inputValues.email,
       formState.inputValues.password
     );
-    setError(null);
     setIsLoading(true);
     try {
       await dispatch(action);
       props.navigation.navigate('HomePage');
       setIsLoading(false);
     } catch (err) {
-      setError(err.message);
+      Alert.alert('An Error Occurred!', err.message, [{ text: 'Okay' }]);
       setIsLoading(false);
     }
   };

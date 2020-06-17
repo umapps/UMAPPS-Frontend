@@ -7,7 +7,7 @@
     },
     "android": {
       "package": "com.umapps.booking",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": [
       ]
     },
