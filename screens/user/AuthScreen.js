@@ -16,6 +16,9 @@ import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Constants';
 import * as authActions from '../../store/actions/auth';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
 const formReducer = (state, action) => {
@@ -43,6 +46,7 @@ const formReducer = (state, action) => {
 
 const AuthScreen = props => {
 
+  const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Checking for updates..");
   const [isDownloadingUpdates, setIsDownloadingUpdates] = useState(false);
@@ -60,13 +64,33 @@ const AuthScreen = props => {
     formIsValid: false
   });
 
+ const sendPushNotification = async () => {
+    const message = {
+      to: token,
+      sound: 'default',
+      title: 'Login Successful!',
+      body: 'Find the menu items on right',
+      data: { data: 'goes here' },
+      _displayInForeground: true,
+    };
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+  };
+
   useEffect(() => {
     const downloadOTAupdates = async () => {
       try {
         setIsDownloadingUpdates(true);
         const update = await Updates.checkForUpdateAsync();
         if (update.isAvailable) {
-          setLoadingMessage("New updates found, Downloading.. this might take up to one minute depending on network connectivity");
+          setLoadingMessage("New updates found, Downloading.. this might take some depending on network connectivity");
           await Updates.fetchUpdateAsync();
           await Updates.reloadAsync();
         }
@@ -75,11 +99,23 @@ const AuthScreen = props => {
       finally {
         setIsDownloadingUpdates(false);
       }
+
+      if (Constants.isDevice) {
+        const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+          const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+          finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+          alert('App not permitted for push notifications. Please provide this permission if you wish to receive push notifications');
+          return;
+        }
+        expoToken = await Notifications.getExpoPushTokenAsync();
+        setToken(expoToken);
+      }
     };
     downloadOTAupdates();
-    // if (error) {
-    //   Alert.alert('An Error Occurred!', error, [{ text: 'Okay' }]);
-    // }
   }, [error]);
 
   const authHandler = async () => {
@@ -92,6 +128,7 @@ const AuthScreen = props => {
     try {
       await dispatch(action);
       props.navigation.navigate('HomePage');
+      sendPushNotification();
       setIsLoading(false);
     } catch (err) {
       Alert.alert('An Error Occurred!', err.message, [{ text: 'Okay' }]);
