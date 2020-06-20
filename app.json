@@ -5,10 +5,15 @@
     "ios": {
       "supportsTablet": true
     },
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#FE4040",
+      "androidMode": "default"
+    },
     "android": {
       "package": "com.umapps.booking",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 9,
+      "versionCode": 11,
       "permissions": [
       ]
     },

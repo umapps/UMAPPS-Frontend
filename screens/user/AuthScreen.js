@@ -71,6 +71,7 @@ const AuthScreen = props => {
       title: 'Login Successful!',
       body: 'Find the menu items on right',
       data: { data: 'goes here' },
+      channelId: 'UMnotify',
       _displayInForeground: true,
     };
     const response = await fetch('https://exp.host/--/api/v2/push/send', {
@@ -111,6 +112,14 @@ const AuthScreen = props => {
           alert('App not permitted for push notifications. Please provide this permission if you wish to receive push notifications');
           return;
         }
+        if (Platform.OS === 'android') {
+          Notifications.createChannelAndroidAsync('UMnotify', {
+            name: 'UMnotify',
+            sound: true,
+            priority: 'max',
+            vibrate: [0, 250, 250, 250],
+          });
+        }   
         expoToken = await Notifications.getExpoPushTokenAsync();
         setToken(expoToken);
       }
