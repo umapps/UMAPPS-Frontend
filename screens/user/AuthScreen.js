@@ -65,7 +65,7 @@ const AuthScreen = props => {
   });
 
  const sendPushNotification = async () => {
-    const message = {
+    const message = [{
       to: token,
       sound: 'default',
       title: 'Login Successful!',
@@ -73,7 +73,8 @@ const AuthScreen = props => {
       data: { data: 'goes here' },
       channelId: 'UMnotify',
       _displayInForeground: true,
-    };
+    }
+  ];
     const response = await fetch('https://exp.host/--/api/v2/push/send', {
       method: 'POST',
       headers: {

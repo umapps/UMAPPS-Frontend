@@ -6,7 +6,7 @@
       "supportsTablet": true
     },
     "notification": {
-      "icon": "./assets/icon.png",
+      "icon": "./assets/icons8-notification-96.png",
       "color": "#FE4040",
       "androidMode": "default"
     },
