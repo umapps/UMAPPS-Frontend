@@ -153,7 +153,7 @@ let updatedStatus = true;
     let checkValidityAction;
     checkValidityAction = authActions.checkValidity(
       formState.inputValues.email,
-      countryCode.substring(1) + formState.inputValues.mobile
+      formState.inputValues.mobile
     );
     setError(null);
     setIsLoading(true);
