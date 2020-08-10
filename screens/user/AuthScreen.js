@@ -252,7 +252,7 @@ const AuthScreen = props => {
 };
 
 AuthScreen.navigationOptions = {
-  headerTitle: 'Authenticatee'
+  headerTitle: 'Authorize'
 };
 
 const styles = StyleSheet.create({
