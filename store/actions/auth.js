@@ -266,7 +266,11 @@ const updateDeviceToken = async (deviceToken, accessToken) => {
     }   
     expoToken = await Notifications.getExpoPushTokenAsync();
 
+    var tokenArray = [];
+    if(deviceToken != null)
+    {
     var tokenArray = deviceToken.split(',');
+    }
     if(tokenArray.includes(expoToken))
     return;
     else{
