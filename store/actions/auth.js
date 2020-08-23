@@ -1,4 +1,9 @@
 import { AsyncStorage, Alert } from 'react-native';
+import AppConstants from '../../constants/Constants';
+
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 // export const SIGNUP = 'SIGNUP';
 // export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
@@ -15,7 +20,7 @@ export const authenticate = (userId, token, expiryTime) => {
 
 export const sendOtp = (email, countyCode, mobile) => {
   return async dispatch => {
-    const url = 'https://umapps.in/send-rgOTP?mobileNumber='+mobile+'&countryCode='+countyCode+'&emailId='+email
+    const url = AppConstants.server_url+'/send-rgOTP?mobileNumber='+mobile+'&countryCode='+countyCode+'&emailId='+email
     const response = await fetch(
       url,
       {
@@ -44,7 +49,7 @@ export const sendOtp = (email, countyCode, mobile) => {
 
 export const deleteuser = (token) => {
   return async dispatch => {
-    const url = 'https://umapps.in/delete'
+    const url = AppConstants.server_url+'/delete'
     const response = await fetch(
       url,
       {
@@ -72,7 +77,7 @@ console.log(response);
 
 export const sendForgotPwOtp = (userId) => {
   return async dispatch => {
-    const url = 'https://umapps.in/send-fpOTP?userId='+userId
+    const url = AppConstants.server_url+'/send-fpOTP?userId='+userId
     const response = await fetch(
       url,
       {
@@ -96,7 +101,7 @@ export const sendForgotPwOtp = (userId) => {
 };
 export const checkValidity = (email, mobile) => {
   return async dispatch => {
-    const url = 'https://umapps.in/check-validity?mobileNumber='+mobile+'&emailId='+email
+    const url = AppConstants.server_url+'/check-validity?mobileNumber='+mobile+'&emailId='+email
     const response = await fetch(
       url,
       {
@@ -116,7 +121,7 @@ export const checkValidity = (email, mobile) => {
 
 export const checkIsRegistered = (userId) => {
   return async dispatch => {
-    const url = 'https://umapps.in/is-registered?userId='+userId
+    const url = AppConstants.server_url+'/is-registered?userId='+userId
     const response = await fetch(
       url,
       {
@@ -133,11 +138,10 @@ export const checkIsRegistered = (userId) => {
   };
 };
 
-
 export const login = (email, password) => {
   return async dispatch => {
     const response = await fetch(
-      'https://umapps.in/sign-in',
+      AppConstants.server_url+'/sign-in',
       {
         method: 'POST',
         headers: {
@@ -163,8 +167,8 @@ export const login = (email, password) => {
       // }
       throw new Error(message);
     }
-
     const resData = await response.json();
+    updateDeviceToken(resData.deviceToken, resData.accessToken);
     saveDataToStorage(resData.accessToken, resData.id, resData.emailId, resData.mobileNumber, resData.roles );
   };
 };
@@ -172,7 +176,7 @@ export const login = (email, password) => {
 export const resetPassword = (userId, password, otp) => {
   return async dispatch => {
     const response = await fetch(
-      'https://umapps.in/reset-password',
+      AppConstants.server_url+'/reset-password',
       {
         method: 'POST',
         headers: {
@@ -193,10 +197,10 @@ export const resetPassword = (userId, password, otp) => {
 };
 
 
-export const register = (fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP) => {
+export const register = (fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP, expoToken) => {
   return async dispatch => {
     const response = await fetch(
-      'https://umapps.in/sign-up',
+      AppConstants.server_url+'/sign-up',
       {
         method: 'POST',
         headers: {
@@ -211,7 +215,8 @@ export const register = (fName, lName, address, password, email, mobile, country
           password: password,
           mobileOTP: mobileOTP,
           emailOTP: emailOTP,
-          countryCode: countryCode
+          countryCode: countryCode,
+          deviceToken: expoToken
         })
       }
     );
@@ -236,6 +241,54 @@ const saveDataToStorage = (token, userId, emailId, mobileNumber, roles) => {
       expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
     })
   );
+}
+
+
+const updateDeviceToken = async (deviceToken, accessToken) => {
+
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      return;
+    }
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('UMnotify', {
+        name: 'UMnotify',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }   
+    expoToken = await Notifications.getExpoPushTokenAsync();
+
+    var tokenArray = deviceToken.split(',');
+    if(tokenArray.includes(expoToken))
+    return;
+    else{
+      tokenArray.push(expoToken);
+      {
+        const response = await fetch(
+          AppConstants.server_url+'/update_token',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': accessToken
+            },
+            body: tokenArray.toString()
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Unable to update device token');
+        }
+      }
+    }
+  }
 }
 
 export const logout = () => {

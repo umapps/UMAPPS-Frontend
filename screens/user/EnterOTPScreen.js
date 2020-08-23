@@ -9,7 +9,9 @@ import {
   Text,
   ActivityIndicator
 } from 'react-native';
-
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 import Card from '../../components/UI/Card';
@@ -30,7 +32,7 @@ const EnterOTPScreen = (props) => {
   const [error, setError] = useState();
   const [mobileOTP, setMobileOTP] = useState('');
   const [emailOTP, setEmailOTP] = useState('');
-  const [currentCount, setCount] = useState(30);
+  const [currentCount, setCount] = useState(100);
   const Clock = () => {
     const timer = () => setCount(currentCount - 1);
     useEffect(
@@ -67,7 +69,7 @@ const EnterOTPScreen = (props) => {
 
        setIsLoading(false);
      }
-     setCount(30);
+     setCount(100);
       };
   const registerHandler = async () => {
     if((emailOTP.trim().length !=4 && email.trim().length >1 )|| mobileOTP.trim().length !=4)
@@ -75,9 +77,34 @@ const EnterOTPScreen = (props) => {
       Alert.alert('OTP not entered correctly');
       return;
     }
+
+    let expoToken = '';
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('App not permitted for push notifications. Please provide this permission if you wish to receive push notifications');
+      }
+      else
+      {
+      if (Platform.OS === 'android') {
+        Notifications.createChannelAndroidAsync('UMnotify', {
+          name: 'UMnotify',
+          sound: true,
+          priority: 'max',
+          vibrate: [0, 250, 250, 250],
+        });
+      }   
+      expoToken = await Notifications.getExpoPushTokenAsync();
+    }
+  }
     let action;
       action = authActions.register(
-        fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP
+        fName, lName, address, password, email, mobile, countryCode, mobileOTP, emailOTP, expoToken
 
       );
     setError(null);
