@@ -3,7 +3,9 @@
     "name": "UMAPP",
     "description": "App to register and book on the UM platform",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.umapps.booking",
+      "buildNumber": "1.0.0"
     },
     "notification": {
       "icon": "./assets/icons8-notification-96.png",
