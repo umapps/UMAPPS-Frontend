@@ -199,7 +199,7 @@ export const register = (
     expoToken
 ) => {
     return async (dispatch) => {
-        const response = await fetch(AppConstants.server_url + "/sign-up", {
+        const response = await fetch(AppConstants.server_url + '/sign-up', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
