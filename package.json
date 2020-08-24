@@ -5,7 +5,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "prettier": "prettier '**/*.js'",
+    "prettierFix": "prettier '**/*.js' --write"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.3",
@@ -34,7 +36,9 @@
     "save": "^2.4.0"
   },
   "devDependencies": {
+    "@react-native-community/async-storage": "^1.12.0",
     "babel-preset-expo": "^8.1.0",
+    "prettier": "^2.1.0",
     "redux-devtools-extension": "^2.13.8"
   },
   "private": true

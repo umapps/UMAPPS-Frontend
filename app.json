@@ -16,8 +16,7 @@
       "package": "com.umapps.booking",
       "googleServicesFile": "./google-services.json",
       "versionCode": 11,
-      "permissions": [
-      ]
+      "permissions": []
     },
     "slug": "UM-Application",
     "privacy": "public",
@@ -40,6 +39,7 @@
       "assets/fonts/*",
       "assets/icon.png",
       "assets/splash.png"
-    ]
+    ],
+    "sdkVersion": "37.0.0"
   }
 }
