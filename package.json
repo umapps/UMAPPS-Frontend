@@ -7,7 +7,9 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "prettier": "prettier '**/*.js'",
-    "prettierFix": "prettier '**/*.js' --write"
+    "prettierCheck": "prettier '**/*.js' --check",
+    "prettierFix": "prettier '**/*.js' --write",
+    "prepush": "npm run prettierCheck && npm run prettierFix"
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.3",
@@ -38,6 +40,7 @@
   "devDependencies": {
     "@react-native-community/async-storage": "^1.12.0",
     "babel-preset-expo": "^8.1.0",
+    "husky": "^4.2.5",
     "prettier": "^2.1.0",
     "redux-devtools-extension": "^2.13.8"
   },
