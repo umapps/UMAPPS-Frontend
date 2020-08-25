@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Platform, StyleSheet } from 'react-native'
+import { View, Text, Platform, StyleSheet, Linking } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import HeaderButton from '../../components/UI/HeaderButton'
@@ -13,6 +13,13 @@ const UserHomeScreen = (props) => {
                 justifyContent: 'center',
             }}>
             <Text>You have logged in successfully</Text>
+            {/* <Text onPress = {() => {Linking.openURL('https://tawk.to/chat/5f44a5b61e7ade5df443a843/default')}}> */}
+            <Text
+                onPress={() => {
+                    Linking.openURL('https://umapps.in/chat')
+                }}>
+                Online Chat
+            </Text>
         </View>
     )
 }
