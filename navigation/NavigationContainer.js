@@ -7,7 +7,6 @@ import UMNavigator from './UMNavigator'
 const NavigationContainer = (props) => {
     const navRef = useRef()
     const isAuth = useSelector((state) => !!state.auth.token)
-    // useSelector(state => console.log(state));
     useEffect(() => {
         if (!isAuth) {
             navRef.current.dispatch(

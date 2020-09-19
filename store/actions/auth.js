@@ -298,6 +298,7 @@ const updateDeviceToken = async (deviceToken, accessToken) => {
 }
 
 export const logout = () => {
+    AsyncStorage.removeItem('userData');
     return {
         type: LOGOUT,
     }

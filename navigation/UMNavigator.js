@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import AdminScreen from '../screens/home/AdminScreen'
 import DeleteAccountScreen from '../screens/home/DeleteAccountScreen'
 import UserHomeScreen from '../screens/home/UserHomeScreen'
+import UMNotificationsScreen from '../screens/home/UMNotificationsScreen'
 import AuthScreen from '../screens/user/AuthScreen'
 import StartupScreen from '../screens/StartupScreen'
 import SignUpScreen from '../screens/user/SignUpScreen'
@@ -47,11 +48,14 @@ const AuthNavigator = createStackNavigator(
 const UserNavigator = createStackNavigator(
     {
         UserHomeScreen: UserHomeScreen,
+        UMNotifications: UMNotificationsScreen,
     },
     {
         navigationOptions: {
+
             drawerIcon: (drawerConfig) => (
                 <Ionicons
+                
                     name={
                         Platform.OS === 'android' ? 'md-person' : 'ios-person'
                     }
