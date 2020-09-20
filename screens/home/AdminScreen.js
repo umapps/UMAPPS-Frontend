@@ -7,6 +7,8 @@ import {
     Alert,
     Modal,
     TouchableHighlight,
+    KeyboardAvoidingView,
+    ScrollView,
 } from 'react-native'
 import {
     Content,
@@ -60,7 +62,6 @@ const AdminScreen = (props) => {
             ])
             setIsLoading(false)
         }
-        // Alert.alert('Success', 'aaa');
     }
 
     return (
@@ -72,104 +73,124 @@ const AdminScreen = (props) => {
                 onRequestClose={() => {
                     Alert.alert('Modal has been closed.')
                 }}>
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Send Notifications</Text>
-                        <ListItem>
-                            <CheckBox
-                                checked={smsCheckBox}
-                                color={Colors.accent}
-                                onPress={() => {
-                                    setSmsCheckBox(!smsCheckBox)
-                                }}
-                            />
-                            <Body>
-                                <Text> SMS</Text>
-                            </Body>
-                        </ListItem>
-                        <ListItem>
-                            <CheckBox
-                                checked={pushCheckBox}
-                                color={Colors.accent}
-                                onPress={() => {
-                                    setPushCheckBox(!pushCheckBox)
-                                }}
-                            />
-                            <Body>
-                                <Text> Push Notification</Text>
-                            </Body>
-                        </ListItem>
-                        <ListItem>
-                            <CheckBox
-                                checked={emailCheckBox}
-                                color={Colors.accent}
-                                onPress={() => {
-                                    setEmailCheckBox(!emailCheckBox)
-                                }}
-                            />
-                            <Body>
-                                <Text> Email</Text>
-                            </Body>
-                        </ListItem>
+                <KeyboardAvoidingView
+                    style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                    }}
+                    behavior="padding"
+                    enabled
+                    keyboardVerticalOffset={1}>
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        keyboardShouldPersistTaps="handled"
+                        automaticallyAdjustContentInsets={false}
+                        style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>
+                                Send Notifications
+                            </Text>
+                            <ListItem>
+                                <CheckBox
+                                    checked={smsCheckBox}
+                                    color={Colors.accent}
+                                    onPress={() => {
+                                        setSmsCheckBox(!smsCheckBox)
+                                    }}
+                                />
+                                <Body>
+                                    <Text> SMS</Text>
+                                </Body>
+                            </ListItem>
+                            <ListItem>
+                                <CheckBox
+                                    checked={pushCheckBox}
+                                    color={Colors.accent}
+                                    onPress={() => {
+                                        setPushCheckBox(!pushCheckBox)
+                                    }}
+                                />
+                                <Body>
+                                    <Text> Push Notification</Text>
+                                </Body>
+                            </ListItem>
+                            <ListItem>
+                                <CheckBox
+                                    checked={emailCheckBox}
+                                    color={Colors.accent}
+                                    onPress={() => {
+                                        setEmailCheckBox(!emailCheckBox)
+                                    }}
+                                />
+                                <Body>
+                                    <Text> Email</Text>
+                                </Body>
+                            </ListItem>
 
-                        <Form>
-                            <Textarea
-                                rowSpan={2}
-                                bordered
-                                placeholder="Subject "
-                                style={{ marginBottom: 30, marginTop: 30 }}
-                                onChangeText={(text) => setSubjectText(text)}
-                            />
-                        </Form>
-                        <Form>
-                            <Textarea
-                                rowSpan={5}
-                                bordered
-                                placeholder="Notification Text "
-                                style={{ marginBottom: 30 }}
-                                onChangeText={(text) => setContentText(text)}
-                            />
-                        </Form>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                {isLoading ? (
-                                    <Spinner color={Colors.primary} />
-                                ) : (
-                                    <TouchableHighlight
-                                        style={{
-                                            ...styles.modalButton,
-                                            backgroundColor: Colors.primary,
-                                        }}
-                                        onPress={() => {
-                                            notificationHandler()
-                                        }}>
-                                        <Text style={styles.textStyle}>
-                                            Send
-                                        </Text>
-                                    </TouchableHighlight>
-                                )}
-                            </View>
-                            <View style={{ flex: 1, paddingLeft: 20 }}>
-                                {isLoading ? (
-                                    <Spinner color={Colors.primary} />
-                                ) : (
-                                    <TouchableHighlight
-                                        style={{
-                                            ...styles.modalButton,
-                                            backgroundColor: Colors.primary,
-                                        }}
-                                        onPress={() => {
-                                            setModalVisible(!modalVisible)
-                                        }}>
-                                        <Text style={styles.textStyle}>
-                                            Cancel
-                                        </Text>
-                                    </TouchableHighlight>
-                                )}
+                            <Form>
+                                <Textarea
+                                    rowSpan={2}
+                                    bordered
+                                    placeholder="Subject "
+                                    style={{ marginBottom: 30, marginTop: 30 }}
+                                    onChangeText={(text) =>
+                                        setSubjectText(text)
+                                    }
+                                />
+                            </Form>
+                            <Form>
+                                <Textarea
+                                    rowSpan={5}
+                                    bordered
+                                    placeholder="Notification Text "
+                                    style={{ marginBottom: 30 }}
+                                    onChangeText={(text) =>
+                                        setContentText(text)
+                                    }
+                                />
+                            </Form>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1 }}>
+                                    {isLoading ? (
+                                        <Spinner color={Colors.primary} />
+                                    ) : (
+                                        <TouchableHighlight
+                                            style={{
+                                                ...styles.modalButton,
+                                                backgroundColor: Colors.primary,
+                                            }}
+                                            onPress={() => {
+                                                notificationHandler()
+                                            }}>
+                                            <Text style={styles.textStyle}>
+                                                Send
+                                            </Text>
+                                        </TouchableHighlight>
+                                    )}
+                                </View>
+                                <View style={{ flex: 1, paddingLeft: 20 }}>
+                                    {isLoading ? (
+                                        <Spinner color={Colors.primary} />
+                                    ) : (
+                                        <TouchableHighlight
+                                            style={{
+                                                ...styles.modalButton,
+                                                backgroundColor: Colors.primary,
+                                            }}
+                                            onPress={() => {
+                                                setModalVisible(!modalVisible)
+                                            }}>
+                                            <Text style={styles.textStyle}>
+                                                Cancel
+                                            </Text>
+                                        </TouchableHighlight>
+                                    )}
+                                </View>
                             </View>
                         </View>
-                    </View>
-                </View>
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </Modal>
             <View style={styles.container}>
                 <TouchableHighlight
@@ -214,8 +235,6 @@ AdminScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        justifyContent: 'flex-start',
-        //alignItems: "stretch",
         marginTop: 10,
     },
     container: {

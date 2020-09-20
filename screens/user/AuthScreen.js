@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     authContainer: {
         width: '80%',
         maxWidth: 400,
-        minWidth: 400,
+        minWidth: 300,
         maxHeight: 400,
         padding: 20,
     },
