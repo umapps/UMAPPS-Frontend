@@ -52,10 +52,8 @@ const UserNavigator = createStackNavigator(
     },
     {
         navigationOptions: {
-
             drawerIcon: (drawerConfig) => (
                 <Ionicons
-                
                     name={
                         Platform.OS === 'android' ? 'md-person' : 'ios-person'
                     }

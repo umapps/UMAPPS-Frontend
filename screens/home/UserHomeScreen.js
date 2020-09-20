@@ -7,23 +7,18 @@ import {
     Image,
     TouchableHighlight,
 } from 'react-native'
-import {
-    Text,
-    Button,
-} from 'native-base'
+import { Text, Button } from 'native-base'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import chatIcon from '../../components/UI/liveChat.png'
 import HeaderButton from '../../components/UI/HeaderButton'
-import * as Font from 'expo-font';
-import { AppLoading } from 'expo';
+import * as Font from 'expo-font'
+import { AppLoading } from 'expo'
 class UserHomeScreen extends Component {
-
-
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             isLoading: true,
-            onNotificationClick: false
+            onNotificationClick: false,
         }
     }
 
@@ -31,36 +26,35 @@ class UserHomeScreen extends Component {
         await Font.loadAsync({
             Roboto: require('native-base/Fonts/Roboto.ttf'),
             Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-        });
-        this.setState({ isLoading: false });
+        })
+        this.setState({ isLoading: false })
     }
     render() {
-        const { isLoading } = this.state;
+        const { isLoading } = this.state
         if (isLoading) {
-            return (
-                <AppLoading />
-            )
-        }
-        else {
+            return <AppLoading />
+        } else {
             return (
                 <View
                     style={{
                         flex: 1,
                         width: '100%',
                         alignItems: 'center',
-                        fontFamily: 'open-sans-bold'
+                        fontFamily: 'open-sans-bold',
                     }}>
-
-                    <View style={{
-                        justifyContent: 'center', flex: 1,
-                        width: '70%'
-                    }}>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            flex: 1,
+                            width: '70%',
+                        }}>
                         <Button
                             style={{ justifyContent: 'center' }}
                             onPress={() => {
-                                this.props.navigation.navigate('UMNotifications');
+                                this.props.navigation.navigate(
+                                    'UMNotifications'
+                                )
                             }}>
-
                             <Text>Click to view Notifications!</Text>
                         </Button>
                     </View>
@@ -94,7 +88,7 @@ class UserHomeScreen extends Component {
                                     alignItems: 'center',
                                 }}>
                                 Any queries?
-                    </Text>
+                            </Text>
                             <Image
                                 source={chatIcon}
                                 style={{
@@ -111,7 +105,6 @@ class UserHomeScreen extends Component {
             )
         }
     }
-
 }
 
 UserHomeScreen.navigationOptions = (navData) => {
@@ -135,11 +128,12 @@ UserHomeScreen.navigationOptions = (navData) => {
                 <Item
                     title="Notifications"
                     iconName={
-                        Platform.OS === 'android' ? 'md-notifications' : 'ios-notifications'
+                        Platform.OS === 'android'
+                            ? 'md-notifications'
+                            : 'ios-notifications'
                     }
                     onPress={() => {
-                        navData.navigation.navigate('UMNotifications');
-
+                        navData.navigation.navigate('UMNotifications')
                     }}
                 />
             </HeaderButtons>
