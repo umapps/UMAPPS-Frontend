@@ -294,7 +294,7 @@ const SignUpScreen = (props) => {
             case 'address':
                 inputValue.trim().length > 0
                     ? (isValidText = true)
-                    : (isValidText = false)
+                    : (isValidText = true)
                 break
             case 'password':
                 inputValue.trim().length > 4
@@ -360,7 +360,7 @@ const SignUpScreen = (props) => {
 
                     <Text style={{ paddingTop: 15, fontSize: 15 }}>
                         {' '}
-                        Address *
+                        Address 
                     </Text>
                     <View>
                         <Textarea

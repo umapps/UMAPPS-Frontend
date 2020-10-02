@@ -62,7 +62,7 @@ const EnterOTPScreen = (props) => {
 
     const resendOTP = async () => {
         let action
-        action = authActions.sendOtp('', mobile)
+        action = authActions.sendOtp('', countryCode, mobile)
         setError(null)
         setIsLoading(true)
         try {
