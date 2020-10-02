@@ -360,7 +360,7 @@ const SignUpScreen = (props) => {
 
                     <Text style={{ paddingTop: 15, fontSize: 15 }}>
                         {' '}
-                        Address 
+                        Address
                     </Text>
                     <View>
                         <Textarea
