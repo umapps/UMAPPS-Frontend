@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
-import { View, Alert, ScrollView } from 'react-native'
+import { View, Alert, ScrollView, TouchableOpacity } from 'react-native'
 import { Card, CardItem, Body, Text, Spinner } from 'native-base'
 import Colors from '../../constants/Constants'
 import * as userActions from '../../store/actions/user'
 import * as Font from 'expo-font'
 import moment from 'moment'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
+import HeaderButton from '../../components/UI/HeaderButton'
+
 class UMNotificationsScreen extends Component {
     constructor(props) {
         super(props)
@@ -26,7 +29,11 @@ class UMNotificationsScreen extends Component {
         }
     }
 
-    render() {
+    press = (key) => {
+        // alert(JSON.stringify(key))
+        this.props.navigation.navigate('Detail', { data: key })
+    }
+    render(props) {
         const { isLoading, notificationList } = this.state
         if (isLoading) {
             return <Spinner color={Colors.primary}></Spinner>
@@ -47,23 +54,29 @@ class UMNotificationsScreen extends Component {
             )
         } else if (notificationList && notificationList.length > 0) {
             const notificationsCardList = notificationList.map(
-                (notifcation) => (
+                (notifcation, key) => (
                     <Card>
-                        <CardItem header>
-                            <Text>{notifcation.subject}</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Body>
-                                <Text> {notifcation.text}</Text>
-                            </Body>
-                        </CardItem>
-                        <CardItem footer>
-                            <Text>
-                                {moment(notifcation.createdDate).format(
-                                    'DD/MM/YYYY'
-                                )}
-                            </Text>
-                        </CardItem>
+                        <TouchableOpacity
+                            onPress={(no) => {
+                                this.press(notifcation)
+                            }}>
+                            <CardItem header>
+                                <Text>{notifcation.subject}</Text>
+                            </CardItem>
+                            <CardItem>
+                                <Body>
+                                    <Text> {notifcation.text}</Text>
+                                </Body>
+                            </CardItem>
+                            <CardItem footer>
+                                <Text>
+                                    {moment(notifcation.createdDate).format(
+                                        'DD/MM/YYYY'
+                                    )}
+                                </Text>
+                            </CardItem>
+                            ======
+                        </TouchableOpacity>
                     </Card>
                 )
             )
@@ -75,7 +88,25 @@ class UMNotificationsScreen extends Component {
         }
     }
 }
-UMNotificationsScreen.navigationOptions = {
-    headerTitle: 'Notifications',
+
+UMNotificationsScreen.navigationOptions = (navData) => {
+    return {
+        headerTitle: 'Notifications',
+        headerLeft: () => (
+            <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                <Item
+                    title="Menu"
+                    iconName={
+                        Platform.OS === 'android' ? 'md-menu' : 'ios-menu'
+                    }
+                    onPress={() => {
+                        navData.navigation.toggleDrawer()
+                    }}
+                />
+            </HeaderButtons>
+        ),
+        // UMNotificationsScreen.navigationOptions = {
+        //     headerTitle: 'Notifications',
+    }
 }
 export default UMNotificationsScreen
