@@ -10,3 +10,4 @@ web-build/
 web-report/
 .vscode/*
 package-lock.json
+google-services.json

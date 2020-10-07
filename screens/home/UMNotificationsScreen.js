@@ -75,7 +75,6 @@ class UMNotificationsScreen extends Component {
                                     )}
                                 </Text>
                             </CardItem>
-                            ======
                         </TouchableOpacity>
                     </Card>
                 )
