@@ -5,7 +5,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.umapps.booking",
-      "buildNumber": "1.0.1"
+      "buildNumber": "1.0.2"
     },
     "notification": {
       "icon": "./assets/icons8-notification-96.png",
