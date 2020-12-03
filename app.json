@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "UMAPP",
+    "name": "UM Connect",
     "description": "App to register and book on the UM platform",
     "ios": {
       "supportsTablet": true,
