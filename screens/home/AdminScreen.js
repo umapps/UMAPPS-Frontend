@@ -9,17 +9,15 @@ import {
     TouchableHighlight,
     KeyboardAvoidingView,
     ScrollView,
+    Button
 } from 'react-native'
 import {
-    Content,
     ListItem,
     CheckBox,
     Body,
-    Input,
     Form,
     Textarea,
     Spinner,
-    Button,
 } from 'native-base'
 import Colors from '../../constants/Constants'
 import * as adminActions from '../../store/actions/admin'
@@ -150,7 +148,7 @@ const AdminScreen = (props) => {
                                     }
                                 />
                             </Form>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', marginBottom: '5%' }}>
                                 <View style={{ flex: 1 }}>
                                     {isLoading ? (
                                         <Spinner color={Colors.primary} />
@@ -192,15 +190,13 @@ const AdminScreen = (props) => {
                     </ScrollView>
                 </KeyboardAvoidingView>
             </Modal>
-            <View style={styles.container}>
-                <TouchableHighlight
-                    style={styles.openButton}
-                    onPress={() => {
-                        setModalVisible(true)
-                    }}>
-                    <Text style={styles.textStyle}>Send Notification</Text>
-                </TouchableHighlight>
-            </View>
+            <Button
+            title={' Send Notification '}
+            color={Colors.primary}
+             onPress={() => {
+                setModalVisible(true)
+            }}
+        />
         </View>
     )
 }
@@ -235,7 +231,7 @@ AdminScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        marginTop: 10,
+        margin: '10%',
     },
     container: {
         flex: 1,

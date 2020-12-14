@@ -8,6 +8,7 @@ import { Platform } from 'react-native'
 import { useDispatch } from 'react-redux'
 import AdminScreen from '../screens/home/AdminScreen'
 import DeleteAccountScreen from '../screens/home/DeleteAccountScreen'
+import SriSudhaHome from '../screens/home/SriSudhaHome'
 import UserHomeScreen from '../screens/home/UserHomeScreen'
 import UMNotificationsScreen from '../screens/home/UMNotificationsScreen'
 import AuthScreen from '../screens/user/AuthScreen'
@@ -106,11 +107,34 @@ const DeleteAccountNavigator = createStackNavigator(
     }
 )
 
+const SriSudhaNavigator = createStackNavigator(
+    {
+        SriSudhaHome: SriSudhaHome,
+    },
+    {
+        navigationOptions: {
+            drawerIcon: (drawerConfig) => (
+                <Ionicons
+                    name={
+                        Platform.OS === 'android'
+                            ? 'md-close-circle'
+                            : 'ios-close-circle'
+                    }
+                    size={23}
+                    color={drawerConfig.tintColor}
+                />
+            ),
+        },
+        defaultNavigationOptions: defaultNavOptions,
+    }
+)
+
 const HomePageNavigator = createDrawerNavigator(
     {
         'Home ': UserNavigator,
         'Admin ': AdminNavigator,
-        'Delete_account   ': DeleteAccountNavigator,
+        'Delete Account   ': DeleteAccountNavigator,
+        'Sri Sudha   ': SriSudhaNavigator,
     },
     {
         contentOptions: {
