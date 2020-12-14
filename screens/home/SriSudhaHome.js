@@ -8,9 +8,14 @@ import {
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { useDispatch } from 'react-redux'
 import HeaderButton from '../../components/UI/HeaderButton'
+import * as srisudha from '../../store/actions/srisudha'
 class SriSudhaHome extends Component {
     constructor(props) {
         super(props)
+    }
+    checkDetails = async() => {
+      const resp = await srisudha.checkUserDetails();
+      console.log(resp);
     }
 
     render() {
@@ -22,7 +27,7 @@ class SriSudhaHome extends Component {
             <Button
             title={' Existing subscriber '}
             color={Colors.primary}
-           // onPress={preSignup}
+             onPress={this.checkDetails}
         />
         <View style ={{margin: '10%'}}></View>
         <Button
