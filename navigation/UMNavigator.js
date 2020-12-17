@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import AdminScreen from '../screens/home/AdminScreen'
 import DeleteAccountScreen from '../screens/home/DeleteAccountScreen'
 import SriSudhaHome from '../screens/home/SriSudhaHome'
+import SriSudhaDetailsScreen from '../screens/home/SriSudhaDetailsScreen'
 import UserHomeScreen from '../screens/home/UserHomeScreen'
 import UMNotificationsScreen from '../screens/home/UMNotificationsScreen'
 import AuthScreen from '../screens/user/AuthScreen'
@@ -110,6 +111,7 @@ const DeleteAccountNavigator = createStackNavigator(
 const SriSudhaNavigator = createStackNavigator(
     {
         SriSudhaHome: SriSudhaHome,
+        SriSudhaDetails: SriSudhaDetailsScreen
     },
     {
         navigationOptions: {
@@ -117,8 +119,8 @@ const SriSudhaNavigator = createStackNavigator(
                 <Ionicons
                     name={
                         Platform.OS === 'android'
-                            ? 'md-close-circle'
-                            : 'ios-close-circle'
+                            ? 'md-book'
+                            : 'ios-book'
                     }
                     size={23}
                     color={drawerConfig.tintColor}

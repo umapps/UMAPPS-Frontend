@@ -6,7 +6,6 @@ import {
     Button
 } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import { useDispatch } from 'react-redux'
 import HeaderButton from '../../components/UI/HeaderButton'
 import * as srisudha from '../../store/actions/srisudha'
 class SriSudhaHome extends Component {
@@ -14,8 +13,14 @@ class SriSudhaHome extends Component {
         super(props)
     }
     checkDetails = async() => {
-      const resp = await srisudha.checkUserDetails();
-      console.log(resp);
+      try {
+          const props = this.props;
+        const resp = await srisudha.checkUserDetails();
+        props.navigation.navigate('SriSudhaDetails', {
+            response: resp
+        })
+    } catch (err) {
+    }
     }
 
     render() {
