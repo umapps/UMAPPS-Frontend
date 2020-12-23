@@ -12,25 +12,68 @@ class SriSudhaDetailsScreen extends Component {
     constructor(props) {
         super(props)
 this.state = {
-    textDisabled: true,
-    buttonText: 'Edit',
-    textColor: 'gray'
+    response : []
 }
     }
 
-    editAddress = () => {
-        const {textDisabled, buttonText} =  this.state;
-        if(buttonText === 'Edit')
-        this.setState({textDisabled: false, buttonText: 'Update', textColor: 'black'})
-        if(buttonText === 'Update')
+    componentDidMount = () => {
+        const response = this.props.navigation.state.params.response;
+        this.setState({response: response});
+        if(response && response.length > 0 )
         {
+response.map((item) => {
+
+    item.textDisabled = true;
+    item.textColor = 'gray';
+    item.buttonText = 'Edit';
+})
+        }
+    }
+    editAddress = (i) => {
+        let response = [...this.state.response];
+
+        if(response && response.length > 0 )
+        {
+            if(response[i].buttonText === 'Edit')
+            {
+            response[i].buttonText = 'Update';
+            response[i].textDisabled = false;
+            response[i].textColor = 'black';
+                        this.setState({ response });
+            }
+            else if(response[i].buttonText === 'Update')
+            {
+            response[i].buttonText = 'dfd';
+
+                        this.setState({ response });
+            }
 
         }
     }
 
+    handleNameChange = (i, text) => {
+        let response = [...this.state.response];
+        response[i].name = text;
+        this.setState({ response });
+     }
+
+     handleAddressChange = (i, text) => {
+        let response = [...this.state.response];
+        response[i].address = text;
+        this.setState({ response });
+     }
+     handleDistrictChange = (i, text) => {
+        let response = [...this.state.response];
+        response[i].district = text;
+        this.setState({ response });
+     }
+     handlePincodeChange = (i, text) => {
+        let response = [...this.state.response];
+        response[i].pincode = text;
+        this.setState({ response });
+     }
     render() {
-        const {textDisabled, buttonText, textColor} = this.state;
-        const response = this.props.navigation.state.params.response;
+        const {response} = this.state;
         if(!response || response.length <=0 ){
          return (              <View style={{
             flex: 1,
@@ -42,7 +85,10 @@ this.state = {
             </View>
         )
     }
-        else {return (
+        else {
+            
+            
+            return (
 //<KeyboardAvoidingView
                     // style={{
                     //     flex: 1,
@@ -61,7 +107,7 @@ this.state = {
 {JSON.stringify(response)}</Text> */}
 
 
-{response.map((item) =>
+{response.map((item, i) =>
     <Card key = {item.addressId}>
     <CardItem header>
         <View style = {{justifyContent: 'space-between', display: 'flex', flexDirection: 'row'}}>
@@ -73,30 +119,38 @@ this.state = {
         <Item style = {{marginBottom: '5%'}}
                         floatingLabel>
                         <Label>Name </Label>
-                        <Input style = {{color: textColor}}
+                        <Input style = {{color: item.textColor}}
+                        autoCapitalize = 'characters'
                             value = {item.name}
-                            disabled = {textDisabled}
+                            disabled = {item.textDisabled}
+                            onChangeText={this.handleNameChange.bind(this, i)}
                         />
                     </Item>
                     <Label style = {{color: 'gray'}}>Address </Label>
                     <Form style ={{marginBottom: 20}}>
-            <Textarea style = {{color: textColor}} rowSpan={3} bordered value = {item.address} disabled={textDisabled}/>
+            <Textarea placeholder= 'Enter your address here' autoCapitalize = 'characters' style = {{color:item.textColor}} rowSpan={3} bordered value = {item.address} disabled={item.textDisabled}
+            onChangeText={this.handleAddressChange.bind(this, i)}/>
           </Form>
                     <Item style = {{marginBottom: '10%'}}
                         floatingLabel>
                         <Label>District </Label>
-                        <Input style = {{color: textColor}}
+                        <Input style = {{color:item.textColor}}
+                        autoCapitalize = 'characters'
                             value = {item.district}
-                            disabled = {textDisabled}
+                            disabled = {item.textDisabled}
+                            onChangeText={this.handleDistrictChange.bind(this, i)}
                         />
                     </Item>
 
                     <Item style = {{marginBottom: '5%'}}
                         floatingLabel>
                         <Label>Pincode </Label>
-                        <Input style = {{color: textColor}}
+                        <Input style = {{color:item.textColor}}
                             value = {item.pincode}
-                            disabled = {textDisabled}
+                            disabled = { item.textDisabled}
+                            keyboardType="number-pad"
+                            maxLength={6}
+                            onChangeText={this.handlePincodeChange.bind(this, i)}
                         />
                     </Item>
 
@@ -118,9 +172,9 @@ this.state = {
     <CardItem footer>
     <View style={{ flex: 2, marginRight: 15 }}>
     <Button
-        title={buttonText}
+        title={item.buttonText}
         color={Colors.primary}
-        onPress={this.editAddress}
+        onPress={this.editAddress.bind(this, i)}
     />
     </View>
     </CardItem>
