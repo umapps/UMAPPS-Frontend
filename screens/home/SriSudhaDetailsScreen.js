@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, CardItem, Body, Text, Textarea, Spinner, Input, Item, Label} from 'native-base'
+import { Card, CardItem, Body, Text, Textarea, Spinner, Input, Item, Label, Form} from 'native-base'
 import {
     View,
     Platform,
@@ -11,10 +11,25 @@ import Colors from '../../constants/Constants'
 class SriSudhaDetailsScreen extends Component {
     constructor(props) {
         super(props)
+this.state = {
+    textDisabled: true,
+    buttonText: 'Edit',
+    textColor: 'gray'
+}
+    }
 
+    editAddress = () => {
+        const {textDisabled, buttonText} =  this.state;
+        if(buttonText === 'Edit')
+        this.setState({textDisabled: false, buttonText: 'Update', textColor: 'black'})
+        if(buttonText === 'Update')
+        {
+
+        }
     }
 
     render() {
+        const {textDisabled, buttonText, textColor} = this.state;
         const response = this.props.navigation.state.params.response;
         if(!response || response.length <=0 ){
          return (              <View style={{
@@ -49,80 +64,63 @@ class SriSudhaDetailsScreen extends Component {
 {response.map((item) =>
     <Card key = {item.addressId}>
     <CardItem header>
-        <Text style ={{fontWeight: 'bold', fontSize: 20}}> Sri Sudha Id : {item.addressId}</Text>
+        <View style = {{justifyContent: 'space-between', display: 'flex', flexDirection: 'row'}}>
+        <Text style ={{fontWeight: 'bold', fontSize: 20, marginRight: 10}}> Sri Sudha Id : {item.addressId}</Text>
+    </View>
     </CardItem>
     <CardItem>
         <Body>
         <Item style = {{marginBottom: '5%'}}
                         floatingLabel>
                         <Label>Name </Label>
-                        <Input
+                        <Input style = {{color: textColor}}
                             value = {item.name}
-                            disabled = {true}
+                            disabled = {textDisabled}
                         />
                     </Item>
-
-                    <Item style = {{marginBottom: '5%'}}
-                        floatingLabel>
-                        <Label>Address </Label>
-                        <Input
-                                                            rowSpan={5}
-                                                            bordered
-                            value = {item.address}
-                           disabled = {true}
-                        />
-                                                <Textarea
-
-                            // style={styles.textAreaStyle}
-                            // onChangeText={inputChangeHandler.bind(
-                            //     this,
-                            //     'address'
-                            // )}
-                        />
-                    </Item>
-
+                    <Label style = {{color: 'gray'}}>Address </Label>
+                    <Form style ={{marginBottom: 20}}>
+            <Textarea style = {{color: textColor}} rowSpan={3} bordered value = {item.address} disabled={textDisabled}/>
+          </Form>
                     <Item style = {{marginBottom: '10%'}}
                         floatingLabel>
                         <Label>District </Label>
-                        <Input
+                        <Input style = {{color: textColor}}
                             value = {item.district}
-                            disabled = {true}
+                            disabled = {textDisabled}
                         />
                     </Item>
 
                     <Item style = {{marginBottom: '5%'}}
                         floatingLabel>
                         <Label>Pincode </Label>
-                        <Input
+                        <Input style = {{color: textColor}}
                             value = {item.pincode}
-                            disabled = {true}
+                            disabled = {textDisabled}
                         />
                     </Item>
 
 
                     <Item style = {{marginBottom: '5%'}}
-                        floatingLabel>
+                        >
                         <Label>End Date </Label>
-                        <Input
+                        <Input style = {{color: 'gray'}}
                             value = {item.endDate}
                             disabled = {true}
                         />
+                                <Button
+        title={'Renew'}
+        color={Colors.primary}
+    />
                     </Item>
         </Body>
     </CardItem>
     <CardItem footer>
     <View style={{ flex: 2, marginRight: 15 }}>
     <Button
-        title={'Update'}
+        title={buttonText}
         color={Colors.primary}
-       // onPress={preSignup}
-    />
-    </View>
-    <View style={{ flex: 2, marginleft: 15 }}>
-            <Button
-        title={'Renew'}
-        color={Colors.primary}
-       // onPress={preSignup}
+        onPress={this.editAddress}
     />
     </View>
     </CardItem>
