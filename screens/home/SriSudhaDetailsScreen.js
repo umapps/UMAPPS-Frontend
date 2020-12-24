@@ -4,9 +4,11 @@ import {
     View,
     Platform,
     Button,
+    Alert,
     KeyboardAvoidingView,
     ScrollView,
 } from 'react-native'
+import * as srisudha from '../../store/actions/srisudha'
 import Colors from '../../constants/Constants'
 class SriSudhaDetailsScreen extends Component {
     constructor(props) {
@@ -25,16 +27,16 @@ response.map((item) => {
 
     item.textDisabled = true;
     item.textColor = 'gray';
-    item.buttonText = 'Edit';
+    item.buttonText = 'Edit Details';
 })
         }
     }
-    editAddress = (i) => {
+    editAddress = async(i) => {
         let response = [...this.state.response];
 
         if(response && response.length > 0 )
         {
-            if(response[i].buttonText === 'Edit')
+            if(response[i].buttonText === 'Edit Details')
             {
             response[i].buttonText = 'Update';
             response[i].textDisabled = false;
@@ -43,11 +45,19 @@ response.map((item) => {
             }
             else if(response[i].buttonText === 'Update')
             {
-            response[i].buttonText = 'dfd';
-
-                        this.setState({ response });
+            const resp = await srisudha.updateUserDetails(response[i].addressId, response[i].name,
+                 response[i].address, response[i].district, response[i].pincode);
+                if(resp)
+                {
+                    
+                    Alert.alert( "Success!", "Details updated successfully", [{text:'OKAY'}]);
+                    this.props.navigation.navigate('SriSudhaHome');
+                }
+                else
+                {
+                    Alert.alert("An Error occured", [{text: 'Okay'}])
+                }
             }
-
         }
     }
 

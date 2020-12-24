@@ -19,7 +19,44 @@ export const checkUserDetails = async() => {
         if (!response.ok) {
             const errorResData = await response.json()
             const errorId = errorResData.error
-            Alert.alert(errorId)
+            Alert.alert("An Error occured", errorId, [{text: 'Okay'}])
+            return
+        }
+        else {
+            let json = await response.json()
+            return json;
+        }
+    }
+
+
+    export const updateUserDetails = async(addressId, name, address, district, pincode) => {
+        const userData = await AsyncStorage.getItem('userData');
+        const transformedData = JSON.parse(userData);
+        const { token } = transformedData;
+
+        const message = 
+            {
+                addressId: addressId,
+                name: name,
+                address: address,
+                district: district,
+                pincode: pincode
+            };
+        const url =
+            AppConstants.server_url +
+            '/update_ss_details'
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: token,
+            },
+            body: JSON.stringify(message),
+        })
+        if (!response.ok) {
+            const errorResData = await response.json()
+            const errorId = errorResData.error
+            Alert.alert("An Error occured", errorId, [{text: 'Okay'}])
             return
         }
         else {
