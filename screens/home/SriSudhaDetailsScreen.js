@@ -97,15 +97,16 @@ class SriSudhaDetailsScreen extends Component {
 
 
             return (
-                //<KeyboardAvoidingView
-                // style={{
-                //     flex: 1,
-                //     flexDirection: 'column',
-                //     justifyContent: 'center',
-                // }}
-                // behavior="padding"
-                // enabled
-                // keyboardVerticalOffset={1}>
+                <KeyboardAvoidingView
+                style={{
+                    flex: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                }}
+                behavior="padding"
+                enabled
+                keyboardVerticalOffset={1}
+                >
                 <ScrollView>
                     <View style={{
                         flex: 1,
@@ -120,7 +121,9 @@ class SriSudhaDetailsScreen extends Component {
                                 </CardItem>
                                 <CardItem>
                                     <Body>
-                                        <Item style={{ marginBottom: '5%' }}
+                                        <View style = {{width: '100%',  marginBottom: '5%' }}>
+                                        <Item
+                                            error = {item.name.length<=0}
                                             floatingLabel>
                                             <Label>Name </Label>
                                             <Input style={{ color: item.textColor }}
@@ -130,12 +133,19 @@ class SriSudhaDetailsScreen extends Component {
                                                 onChangeText={this.handleNameChange.bind(this, i)}
                                             />
                                         </Item>
+                                        {item.name.length<=0 && <Text style={{ color: 'red'}}>Name cannot be empty</Text>}
+                                        </View>
+                                        <View style = {{width: '100%',  marginBottom: '5%' }}>
                                         <Label style={{ color: 'gray' }}>Address </Label>
-                                        <Form style={{ marginBottom: 20 }}>
-                                            <Textarea placeholder='Enter your address here' autoCapitalize='characters' style={{ color: item.textColor }} rowSpan={3} bordered value={item.address} disabled={item.textDisabled}
+                                        <Form>
+                                            <Textarea  placeholder='Enter your address here' autoCapitalize='characters' style={{ color: item.textColor }} rowSpan={3} bordered value={item.address} disabled={item.textDisabled}
                                                 onChangeText={this.handleAddressChange.bind(this, i)} />
                                         </Form>
-                                        <Item style={{ marginBottom: '10%' }}
+                                        {item.address.length<=0 && <Text style={{ color: 'red'}}>Address cannot be empty</Text>}
+                                        </View>
+                                        <View style = {{width: '100%',  marginBottom: '5%' }}>
+                                        <Item 
+                                        error = {item.district.length<=0}
                                             floatingLabel>
                                             <Label>District </Label>
                                             <Input style={{ color: item.textColor }}
@@ -145,11 +155,11 @@ class SriSudhaDetailsScreen extends Component {
                                                 onChangeText={this.handleDistrictChange.bind(this, i)}
                                             />
                                         </Item>
-
-            
+                                        {item.district.length<=0 && <Text style={{ color: 'red' }}>district cannot be empty</Text>}
+                                        </View>
+                                        <View style = {{width: '100%',  marginBottom: '5%' }}>
                                         <Item 
-                                       // error = {true} 
-                                        style={{ marginBottom: '5%' }}
+                                       error = {item.pincode.length<=0}
                                             floatingLabel>
                                             <Label>Pincode </Label>
                                             <Input style={{ color: item.textColor }}
@@ -160,6 +170,8 @@ class SriSudhaDetailsScreen extends Component {
                                                 onChangeText={this.handlePincodeChange.bind(this, i)}
                                             />
                                         </Item>
+                                        {item.pincode.length!=6 && <Text style={{ color: 'red'}}>Pincode should be 6 characters long</Text>}
+                                        </View>
                                         <Item style={{ marginBottom: '5%' }}
                                         >
                                             <Label>End Date </Label>
@@ -188,6 +200,7 @@ class SriSudhaDetailsScreen extends Component {
                                                 <Button
                                                     title={item.buttonText}
                                                     color={Colors.primary}
+                                                    disabled = {item.pincode.length!=6 ||item.address.length<=0 ||item.name.length<=0 ||item.district.length<=0 }
                                                     onPress={this.editAddress.bind(this, i)}
                                                 />
                                             )}
@@ -200,7 +213,7 @@ class SriSudhaDetailsScreen extends Component {
 
                     </View>
                 </ScrollView>
-                // </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
             )
         }
 
