@@ -7,6 +7,7 @@ import {
     Alert,
     KeyboardAvoidingView,
     ScrollView,
+    ActivityIndicator
 } from 'react-native'
 import * as srisudha from '../../store/actions/srisudha'
 import Colors from '../../constants/Constants'
@@ -14,7 +15,8 @@ class SriSudhaDetailsScreen extends Component {
     constructor(props) {
         super(props)
 this.state = {
-    response : []
+    response : [],
+    isLoading: false
 }
     }
 
@@ -32,6 +34,7 @@ response.map((item) => {
         }
     }
     editAddress = async(i) => {
+        this.setState({isLoading: true});
         let response = [...this.state.response];
 
         if(response && response.length > 0 )
@@ -59,6 +62,7 @@ response.map((item) => {
                 }
             }
         }
+        this.setState({isLoading: false});
     }
 
     handleNameChange = (i, text) => {
@@ -83,7 +87,7 @@ response.map((item) => {
         this.setState({ response });
      }
     render() {
-        const {response} = this.state;
+        const {response , isLoading} = this.state;
         if(!response || response.length <=0 ){
          return (              <View style={{
             flex: 1,
@@ -181,11 +185,23 @@ response.map((item) => {
     </CardItem>
     <CardItem footer>
     <View style={{ flex: 2, marginRight: 15 }}>
-    <Button
-        title={item.buttonText}
-        color={Colors.primary}
-        onPress={this.editAddress.bind(this, i)}
-    />
+
+
+    {isLoading ? (
+                            <ActivityIndicator
+                                size="small"
+                                color={Colors.primary}
+                            />
+                        ) : (
+                        
+                            <Button
+                            title={item.buttonText}
+                            color={Colors.primary}
+                            onPress={this.editAddress.bind(this, i)}
+                        />
+                        )}
+
+
     </View>
     </CardItem>
 </Card>
