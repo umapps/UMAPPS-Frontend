@@ -111,17 +111,13 @@ const DeleteAccountNavigator = createStackNavigator(
 const SriSudhaNavigator = createStackNavigator(
     {
         SriSudhaHome: SriSudhaHome,
-        SriSudhaDetails: SriSudhaDetailsScreen
+        SriSudhaDetails: SriSudhaDetailsScreen,
     },
     {
         navigationOptions: {
             drawerIcon: (drawerConfig) => (
                 <Ionicons
-                    name={
-                        Platform.OS === 'android'
-                            ? 'md-book'
-                            : 'ios-book'
-                    }
+                    name={Platform.OS === 'android' ? 'md-book' : 'ios-book'}
                     size={23}
                     color={drawerConfig.tintColor}
                 />
